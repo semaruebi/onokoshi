@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Route, EliteGroup } from '../types';
+import { Route } from '../types';
 import { parseRouteText } from '../utils/routeParser';
 import { addRoute, generateId } from '../utils/storage';
 

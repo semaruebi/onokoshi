@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Route, CheckResult } from '../types';
 import { addHistory, generateId } from '../utils/storage';
 
