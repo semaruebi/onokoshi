@@ -6,23 +6,38 @@
   --accent-100: #D6C6E1;
   --accent-200: #9A73B5;
   --text-100: #4A4A4A;
-  --text-200: #878787;
-  --bg-100: #F5F3F7;
-  --bg-200: #E9E4ED;
-  --bg-300: #FFFFFF;
+  --text-200: #757575;
+  --text-300: #9E9E9E;
+  --bg-100: #F0F2F5;
+  --bg-200: #FFFFFF;
+  --bg-glass: rgba(255, 255, 255, 0.7);
+  --border-glass: rgba(255, 255, 255, 0.5);
+  --shadow-sm: 0 2px 8px rgba(139, 95, 191, 0.1);
+  --shadow-md: 0 4px 16px rgba(139, 95, 191, 0.15);
+  --shadow-lg: 0 8px 24px rgba(139, 95, 191, 0.2);
+  --success: #4CAF50;
+  --warning: #FF9800;
+  --error: #FF5252;
 }
 
 /* 淵下宮 常夜（ダークテーマ） */
 [data-theme="dark"] {
-  --primary-100: #7B4F8E;
-  --primary-200: #563763;
-  --primary-300: #D7C5DF;
-  --accent-100: #B794C0;
+  --primary-100: #9D74B5;
+  --primary-200: #7B4F8E;
+  --primary-300: #EADDF2;
+  --accent-100: #564366;
   --accent-200: #895896;
-  --text-100: #FFFFFF;
-  --text-200: #909090;
-  --bg-100: #3B2D4D;
-  --bg-200: #382B49;
-  --bg-300: #4D3B64;
+  --text-100: #F0F0F0;
+  --text-200: #B0B0B0;
+  --text-300: #707070;
+  --bg-100: #1A1625;
+  --bg-200: #2D2438;
+  --bg-glass: rgba(45, 36, 56, 0.7);
+  --border-glass: rgba(255, 255, 255, 0.1);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --success: #66BB6A;
+  --warning: #FFA726;
+  --error: #FF5252;
 }
-

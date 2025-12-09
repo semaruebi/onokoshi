@@ -24,78 +24,121 @@ export const RunList = ({ runs, onRunSelect, onRunDeleted }: RunListProps) => {
 
   if (runs.length === 0) {
     return (
-      <div className="card">
-        <p style={{ color: '#666', textAlign: 'center' }}>
-          まだRUNが作成されていません。「新規作成」ボタンから作成してください。
+      <div className="card" style={{ textAlign: 'center', padding: '48px 20px', background: 'var(--bg-200)', borderStyle: 'dashed' }}>
+        <p style={{ color: 'var(--text-200)', fontSize: '16px', fontWeight: 600 }}>
+          まだ記録がありません 📝
+        </p>
+        <p style={{ color: 'var(--text-200)', fontSize: '14px', marginTop: '8px', opacity: 0.8 }}>
+          「新規作成」ボタンから新しい冒険を始めましょう！
         </p>
       </div>
     );
   }
 
   return (
-    <div className="card">
-      <h2 style={{ marginBottom: '16px', color: '#333' }}>📋 RUN一覧</h2>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+    <div className="card" style={{ background: 'transparent', boxShadow: 'none', padding: 0, border: 'none' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', padding: '0 4px' }}>
+        <h2 style={{ color: 'var(--text-100)', fontSize: '18px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          📋 冒険の記録
+          <span style={{ fontSize: '12px', fontWeight: 'normal', color: 'var(--text-200)', background: 'var(--bg-200)', padding: '2px 8px', borderRadius: '12px' }}>
+            {runs.length}件
+          </span>
+        </h2>
+      </div>
+      
+      <div style={{ display: 'grid', gap: '12px' }}>
         {runs.map((run) => {
           const remainingCount = run.routes
             .filter(r => r.hasRemaining)
             .reduce((sum, r) => sum + r.remainingCount, 0);
           const totalRemaining = run.routes.filter(r => r.hasRemaining).length;
+          
+          // 日付フォーマット
+          const date = new Date(run.updatedAt);
+          const dateStr = date.toLocaleDateString('ja-JP', { month: 'short', day: 'numeric', weekday: 'short' });
+          const timeStr = date.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
 
           return (
             <div
               key={run.id}
               onClick={(e) => {
-                // ドハティの閾値: 即座の視覚的フィードバック
                 showImmediateFeedback(e.currentTarget as HTMLElement);
                 onRunSelect(run);
               }}
+              className="selectable-card"
               style={{
-                padding: '8px 12px',
-                border: '2px solid #e0e0e0',
-                borderRadius: '6px',
+                padding: '16px 20px',
+                borderRadius: '16px',
                 cursor: 'pointer',
-                transition: 'all 0.2s',
-                backgroundColor: '#f9f9f9',
-                userSelect: 'none'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#667eea';
-                e.currentTarget.style.backgroundColor = '#f0f4ff';
-                e.currentTarget.style.transform = 'translateX(2px)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = '#e0e0e0';
-                e.currentTarget.style.backgroundColor = '#f9f9f9';
-                e.currentTarget.style.transform = 'translateX(0)';
+                backgroundColor: 'var(--bg-300)',
+                border: '1px solid var(--bg-200)',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.02)',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                position: 'relative',
+                overflow: 'hidden'
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: '16px', fontWeight: 'bold', color: '#333', marginBottom: '4px' }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px', marginBottom: '6px' }}>
+                  <div style={{ fontSize: '16px', fontWeight: 'bold', color: 'var(--text-100)' }}>
                     {run.name}
                   </div>
-                  <div style={{ fontSize: '12px', color: '#666' }}>
-                    仮残し: {remainingCount}体 / {totalRemaining}ルート
-                  </div>
-                  <div style={{ fontSize: '11px', color: '#999', marginTop: '2px' }}>
-                    {new Date(run.updatedAt).toLocaleString('ja-JP')}
+                  <div style={{ fontSize: '12px', color: 'var(--text-200)', fontFamily: 'monospace' }}>
+                    {dateStr} {timeStr}
                   </div>
                 </div>
-                <button
-                  onClick={(e) => handleDelete(e, run.id)}
-                  style={{
-                    backgroundColor: 'var(--primary-200)',
-                    color: 'var(--primary-300)',
-                    padding: '6px 14px',
-                    fontSize: '12px',
-                    borderRadius: '8px',
-                    boxShadow: '0 2px 6px rgba(139, 95, 191, 0.3)'
-                  }}
-                >
-                  削除
-                </button>
+                
+                <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: 'var(--text-200)' }}>
+                    <span style={{ 
+                      width: '8px', 
+                      height: '8px', 
+                      borderRadius: '50%', 
+                      background: remainingCount > 0 ? '#FF6B6B' : '#4CAF50' 
+                    }} />
+                    {remainingCount > 0 ? (
+                      <span>狩り残し <strong style={{ color: '#FF6B6B' }}>{remainingCount}</strong> 体</span>
+                    ) : (
+                      <span style={{ color: '#4CAF50', fontWeight: '600' }}>コンプリート！</span>
+                    )}
+                  </div>
+                  
+                  {totalRemaining > 0 && (
+                    <div style={{ fontSize: '12px', color: 'var(--text-300)', background: 'var(--bg-100)', padding: '2px 8px', borderRadius: '4px' }}>
+                      {totalRemaining} ルート未完了
+                    </div>
+                  )}
+                </div>
               </div>
+
+              <button
+                onClick={(e) => handleDelete(e, run.id)}
+                className="icon-button"
+                style={{
+                  background: 'transparent',
+                  color: 'var(--text-300)',
+                  padding: '8px',
+                  borderRadius: '50%',
+                  minHeight: 'auto',
+                  boxShadow: 'none',
+                  opacity: 0.6
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'var(--bg-100)';
+                  e.currentTarget.style.color = '#FF6B6B';
+                  e.currentTarget.style.opacity = '1';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.color = 'var(--text-300)';
+                  e.currentTarget.style.opacity = '0.6';
+                }}
+                title="削除"
+              >
+                🗑️
+              </button>
             </div>
           );
         })}
@@ -103,4 +146,3 @@ export const RunList = ({ runs, onRunSelect, onRunDeleted }: RunListProps) => {
     </div>
   );
 };
-

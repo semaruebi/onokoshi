@@ -50,7 +50,7 @@ function App() {
     try {
       const now = new Date();
       const dateStr = now.toISOString().split('T')[0].replace(/-/g, '-');
-      const runName = `${dateStr} RUN`;
+      const runName = `${dateStr} ${routeSet.name}`;
 
       const newRun: Run = {
         id: generateId(),
@@ -187,6 +187,7 @@ function App() {
           routeSets={routeSets}
           onSelect={handleRouteSetSelect}
           onCancel={() => setViewMode('home')}
+          onRouteSetDeleted={loadRouteSets}
         />
       )}
 
