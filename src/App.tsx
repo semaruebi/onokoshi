@@ -64,7 +64,7 @@ function App() {
           remainingCount: 0,
           comment: ''
         })),
-        expectedEliteCount: 0,
+        expectedEliteCount: routeSet.expectedEliteCount || 0,
         tsurumiShortage: 0,
         adlibAddition: 0
       };
@@ -111,22 +111,22 @@ function App() {
           transition: 'all 0.2s',
           padding: '20px',
           borderRadius: '16px',
-          background: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
-          boxShadow: '0 4px 16px rgba(255, 154, 158, 0.3)'
+          background: `linear-gradient(135deg, var(--primary-100) 0%, var(--accent-200) 100%)`,
+          boxShadow: '0 4px 16px rgba(139, 95, 191, 0.3)'
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.transform = 'translateY(-2px)';
-          e.currentTarget.style.boxShadow = '0 6px 20px rgba(255, 154, 158, 0.4)';
+          e.currentTarget.style.boxShadow = '0 6px 20px rgba(139, 95, 191, 0.4)';
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.transform = 'translateY(0)';
-          e.currentTarget.style.boxShadow = '0 4px 16px rgba(255, 154, 158, 0.3)';
+          e.currentTarget.style.boxShadow = '0 4px 16px rgba(139, 95, 191, 0.3)';
         }}
       >
-        <h1 style={{ fontSize: '32px', marginBottom: '8px', fontWeight: 'bold', color: 'white' }}>
+        <h1 style={{ fontSize: '32px', marginBottom: '8px', fontWeight: 'bold', color: 'var(--primary-300)' }}>
           お残しは許しまへんday
         </h1>
-        <p style={{ fontSize: '16px', color: 'white', opacity: 0.95 }}>
+        <p style={{ fontSize: '16px', color: 'var(--primary-300)', opacity: 0.95 }}>
           狩り残し確認・記録ツール
         </p>
       </div>

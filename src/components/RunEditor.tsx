@@ -150,7 +150,7 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
             <div style={{ fontSize: '14px', color: '#666', marginBottom: '4px' }}>
               狩り残し総数
             </div>
-            <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#ff6b9d' }}>
+            <div style={{ fontSize: '20px', fontWeight: 'bold', color: 'var(--primary-100)' }}>
               {totalRemaining}
             </div>
           </div>
@@ -182,18 +182,18 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
         <div style={{
           textAlign: 'center',
           padding: '16px',
-          background: 'linear-gradient(135deg, #fff5f5 0%, #ffeef0 100%)',
+          background: `linear-gradient(135deg, var(--accent-100) 0%, var(--bg-200) 100%)`,
           borderRadius: '12px',
-          border: '2px solid #ff9a9e',
-          boxShadow: '0 2px 12px rgba(255, 154, 158, 0.2)'
+          border: `2px solid var(--primary-100)`,
+          boxShadow: '0 2px 12px rgba(139, 95, 191, 0.2)'
         }}>
-          <div style={{ fontSize: '12px', color: '#666', marginBottom: '6px', fontWeight: 600 }}>
+          <div style={{ fontSize: '12px', color: 'var(--text-200)', marginBottom: '6px', fontWeight: 600 }}>
             最終結果
           </div>
-          <div style={{ fontSize: '36px', fontWeight: 'bold', color: '#ff6b9d', marginBottom: '4px' }}>
+          <div style={{ fontSize: '36px', fontWeight: 'bold', color: 'var(--primary-100)', marginBottom: '4px' }}>
             {finalCount}
           </div>
-          <div style={{ fontSize: '11px', color: '#999', fontFamily: 'monospace' }}>
+          <div style={{ fontSize: '11px', color: 'var(--text-200)', fontFamily: 'monospace' }}>
             {expectedEliteCount} - {totalRemaining} - {tsurumiShortage} + {adlibAddition}
           </div>
         </div>
@@ -210,20 +210,20 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
               style={{
                 padding: '8px 12px',
                 border: '2px solid',
-                borderColor: routeRun.hasRemaining ? '#ff9a9e' : 'rgba(255, 154, 158, 0.3)',
+                borderColor: routeRun.hasRemaining ? 'var(--primary-100)' : 'var(--accent-100)',
                 borderRadius: '10px',
-                backgroundColor: routeRun.hasRemaining ? '#fff5f5' : '#fafafa',
+                backgroundColor: routeRun.hasRemaining ? 'var(--accent-100)' : 'var(--bg-200)',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
                 // ドハティの閾値: 即座の視覚的フィードバック
                 userSelect: 'none'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = routeRun.hasRemaining ? '#ff6b9d' : '#ff9a9e';
+                e.currentTarget.style.borderColor = routeRun.hasRemaining ? 'var(--primary-200)' : 'var(--primary-100)';
                 e.currentTarget.style.transform = 'translateX(2px)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = routeRun.hasRemaining ? '#ff9a9e' : 'rgba(255, 154, 158, 0.3)';
+                e.currentTarget.style.borderColor = routeRun.hasRemaining ? 'var(--primary-100)' : 'var(--accent-100)';
                 e.currentTarget.style.transform = 'translateX(0)';
               }}
               onMouseDown={(e) => {
@@ -237,7 +237,7 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
                 <div style={{
                   fontSize: '14px',
                   fontWeight: 'bold',
-                  color: routeRun.hasRemaining ? '#ff6b9d' : '#333'
+                  color: routeRun.hasRemaining ? 'var(--primary-100)' : 'var(--text-100)'
                 }}>
                   {routeRun.hasRemaining ? '❌' : '✅'} {routeRun.routeName}
                 </div>
@@ -283,12 +283,12 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
                             addTagToComment(routeRun.routeId, tag);
                           }}
                           style={{
-                            background: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
-                            color: 'white',
+                            background: `linear-gradient(135deg, var(--primary-100) 0%, var(--accent-200) 100%)`,
+                            color: 'var(--primary-300)',
                             padding: '4px 10px',
                             fontSize: '11px',
                             borderRadius: '6px',
-                            boxShadow: '0 1px 4px rgba(255, 154, 158, 0.3)'
+                            boxShadow: '0 1px 4px rgba(139, 95, 191, 0.3)'
                           }}
                         >
                           {tag}

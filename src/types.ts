@@ -11,6 +11,7 @@ export interface RouteSet {
   id: string;
   name: string; // ルートセット名
   routes: Route[];
+  expectedEliteCount: number; // 想定精鋭数
   createdAt: string;
   updatedAt: string;
 }

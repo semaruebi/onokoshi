@@ -31,22 +31,22 @@ export const RouteSetSelector = ({ routeSets, onSelect, onCancel }: RouteSetSele
             key={routeSet.id}
             onClick={() => onSelect(routeSet)}
             className="selectable-card"
-            style={{
-              padding: '12px',
-              border: '2px solid #e0e0e0',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              backgroundColor: '#f9f9f9',
-              transition: 'all 0.2s'
-            }}
+              style={{
+                padding: '12px',
+                border: '2px solid var(--accent-100)',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                backgroundColor: 'var(--bg-200)',
+                transition: 'all 0.2s'
+              }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = '#ff9a9e';
-              e.currentTarget.style.backgroundColor = '#fff5f5';
+              e.currentTarget.style.borderColor = 'var(--primary-100)';
+              e.currentTarget.style.backgroundColor = 'var(--accent-100)';
               e.currentTarget.style.transform = 'translateX(2px)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = '#e0e0e0';
-              e.currentTarget.style.backgroundColor = '#f9f9f9';
+              e.currentTarget.style.borderColor = 'var(--accent-100)';
+              e.currentTarget.style.backgroundColor = 'var(--bg-200)';
               e.currentTarget.style.transform = 'translateX(0)';
             }}
           >

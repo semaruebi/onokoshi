@@ -11,6 +11,7 @@ interface RouteSetFormProps {
 export const RouteSetForm = ({ onRouteSetAdded }: RouteSetFormProps) => {
   const [routeSetName, setRouteSetName] = useState('');
   const [routeText, setRouteText] = useState('');
+  const [expectedEliteCount, setExpectedEliteCount] = useState<number>(0);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,6 +38,7 @@ export const RouteSetForm = ({ onRouteSetAdded }: RouteSetFormProps) => {
         id: generateId(),
         name: routeSetName.trim(),
         routes,
+        expectedEliteCount: expectedEliteCount || 0,
         createdAt: now,
         updatedAt: now
       };
@@ -44,6 +46,7 @@ export const RouteSetForm = ({ onRouteSetAdded }: RouteSetFormProps) => {
       await saveRouteSet(routeSet);
       setRouteSetName('');
       setRouteText('');
+      setExpectedEliteCount(0);
       onRouteSetAdded();
       showSuccessFeedback('ルートセットを登録しました！');
     } catch (error) {
@@ -72,6 +75,18 @@ export const RouteSetForm = ({ onRouteSetAdded }: RouteSetFormProps) => {
         </div>
         <div style={{ marginBottom: '16px' }}>
           <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: '#555' }}>
+            想定精鋭数
+          </label>
+          <input
+            type="number"
+            value={expectedEliteCount || ''}
+            onChange={(e) => setExpectedEliteCount(parseInt(e.target.value) || 0)}
+            placeholder="例: 100"
+            style={{ width: '100%', padding: '10px', fontSize: '14px' }}
+          />
+        </div>
+        <div style={{ marginBottom: '16px' }}>
+          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: '#555' }}>
             ルートリスト（一行ずつ入力）
           </label>
           <textarea
@@ -81,7 +96,8 @@ export const RouteSetForm = ({ onRouteSetAdded }: RouteSetFormProps) => {
             style={{ width: '100%', minHeight: '120px', padding: '10px', fontSize: '14px' }}
           />
           <div style={{ marginTop: '8px', fontSize: '13px', color: '#666' }}>
-            形式: ルート名 精鋭数（例: かつヴァナ 5）
+            形式: ルート名 精鋭数（例: かつヴァナ 5、かつヴァナ (5)、かつヴァナ）<br />
+            精鋭数は省略可能です
           </div>
         </div>
         <button

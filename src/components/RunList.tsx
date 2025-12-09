@@ -85,12 +85,12 @@ export const RunList = ({ runs, onRunSelect, onRunDeleted }: RunListProps) => {
                 <button
                   onClick={(e) => handleDelete(e, run.id)}
                   style={{
-                    backgroundColor: '#ff6b9d',
-                    color: 'white',
+                    backgroundColor: 'var(--primary-200)',
+                    color: 'var(--primary-300)',
                     padding: '6px 14px',
                     fontSize: '12px',
                     borderRadius: '8px',
-                    boxShadow: '0 2px 6px rgba(255, 107, 157, 0.3)'
+                    boxShadow: '0 2px 6px rgba(139, 95, 191, 0.3)'
                   }}
                 >
                   削除
