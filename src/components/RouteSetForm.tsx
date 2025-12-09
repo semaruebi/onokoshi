@@ -69,7 +69,7 @@ export const RouteSetForm = ({ onRouteSetAdded }: RouteSetFormProps) => {
             type="text"
             value={routeSetName}
             onChange={(e) => setRouteSetName(e.target.value)}
-            placeholder="例: 今日のRTAルート"
+            placeholder="例: 400EE NPuI No LeyLine / ぼくのかんがえたさいきょうのるーと"
             style={{ width: '100%', padding: '10px', fontSize: '14px' }}
           />
         </div>
@@ -92,7 +92,7 @@ export const RouteSetForm = ({ onRouteSetAdded }: RouteSetFormProps) => {
           <textarea
             value={routeText}
             onChange={(e) => setRouteText(e.target.value)}
-            placeholder="かつヴァナ 5&#10;聖遺殿 8&#10;..."
+            placeholder="かつヴァナ 5&#10;聖遺殿 8&#10;...&#10;（livesplitのsegmentをそのまま貼り付けでOK)"
             style={{ width: '100%', minHeight: '120px', padding: '10px', fontSize: '14px' }}
           />
           <div style={{ marginTop: '8px', fontSize: '13px', color: '#666' }}>

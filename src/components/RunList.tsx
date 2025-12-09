@@ -29,7 +29,7 @@ export const RunList = ({ runs, onRunSelect, onRunDeleted }: RunListProps) => {
           まだ記録がありません 📝
         </p>
         <p style={{ color: 'var(--text-200)', fontSize: '14px', marginTop: '8px', opacity: 0.8 }}>
-          「新規作成」ボタンから新しい冒険を始めましょう！
+          「新規作成」ボタンから今日の結果を確認しましょう！
         </p>
       </div>
     );
@@ -39,7 +39,7 @@ export const RunList = ({ runs, onRunSelect, onRunDeleted }: RunListProps) => {
     <div className="card" style={{ background: 'transparent', boxShadow: 'none', padding: 0, border: 'none' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', padding: '0 4px' }}>
         <h2 style={{ color: 'var(--text-100)', fontSize: '18px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          📋 冒険の記録
+          📋 狩り残しの記録
           <span style={{ fontSize: '12px', fontWeight: 'normal', color: 'var(--text-200)', background: 'var(--bg-200)', padding: '2px 8px', borderRadius: '12px' }}>
             {runs.length}件
           </span>
@@ -101,7 +101,7 @@ export const RunList = ({ runs, onRunSelect, onRunDeleted }: RunListProps) => {
                     {remainingCount > 0 ? (
                       <span>狩り残し <strong style={{ color: '#FF6B6B' }}>{remainingCount}</strong> 体</span>
                     ) : (
-                      <span style={{ color: '#4CAF50', fontWeight: '600' }}>コンプリート！</span>
+                      <span style={{ color: '#4CAF50', fontWeight: '600' }}>かんぺき！</span>
                     )}
                   </div>
                   

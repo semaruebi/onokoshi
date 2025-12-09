@@ -14,11 +14,25 @@ function App() {
   const [routeSets, setRouteSets] = useState<RouteSet[]>([]);
   const [selectedRun, setSelectedRun] = useState<Run | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('home');
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   useEffect(() => {
     loadRuns();
     loadRouteSets();
+    // テーマをローカルストレージから読み込み
+    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | null;
+    if (savedTheme) {
+      setTheme(savedTheme);
+      document.documentElement.setAttribute('data-theme', savedTheme);
+    }
   }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    document.documentElement.setAttribute('data-theme', newTheme);
+  };
 
   const loadRuns = async () => {
     try {
@@ -98,6 +112,33 @@ function App() {
 
   return (
     <div>
+      {/* テーマ切り替えボタン */}
+      <button
+        onClick={toggleTheme}
+        style={{
+          position: 'fixed',
+          top: '16px',
+          right: '16px',
+          zIndex: 1000,
+          background: 'var(--bg-300)',
+          border: '2px solid var(--accent-100)',
+          borderRadius: '12px',
+          padding: '10px 16px',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+          color: 'var(--text-100)',
+          fontSize: '14px',
+          fontWeight: '600',
+          minHeight: '44px'
+        }}
+      >
+        {theme === 'light' ? '🌙' : '☀️'}
+        <span>{theme === 'light' ? '常夜' : '白夜'}</span>
+      </button>
+
       {/* ヘッダー */}
       <div 
         onClick={() => {

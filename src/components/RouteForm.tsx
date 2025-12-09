@@ -45,16 +45,16 @@ export const RouteForm = ({ onRouteAdded }: RouteFormProps) => {
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: '16px' }}>
           <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: '#555' }}>
-            ルートリスト（一行ずつ入力）
+            ルートリスト
           </label>
           <textarea
             value={routeText}
             onChange={(e) => setRouteText(e.target.value)}
-            placeholder="かつヴァナ 5&#10;聖遺殿 8&#10;..."
+            placeholder="かつヴァナ 5&#10;聖遺殿 8&#10;...&#10;（livesplitのsegmentをそのまま貼り付けでOK)"
             style={{ width: '100%', minHeight: '150px' }}
           />
           <div style={{ marginTop: '8px', fontSize: '14px', color: '#666' }}>
-            形式: ルート名 精鋭数（例: かつヴァナ 5）
+            形式: ルート名 精鋭数（例: かつヴァナ(5)）
           </div>
         </div>
         <button

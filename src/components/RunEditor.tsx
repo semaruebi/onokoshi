@@ -89,7 +89,7 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
       if (totalRemaining === 0) {
         setIsCompleted(true);
         // コンプリート時のフィードバック
-        showSuccessFeedback('🎉 おめでとうございます！狩り残しゼロで完了しました！');
+        showSuccessFeedback('🎉 狩り残しなし！　えらい！');
         setTimeout(() => {
           onSave();
         }, 2000);
@@ -251,13 +251,10 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
 
       {/* ルート一覧 */}
       <div className="card" style={{ padding: '24px 32px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+        <div style={{ marginBottom: '20px' }}>
           <h2 style={{ color: 'var(--text-100)', fontSize: '18px', fontWeight: 'bold' }}>
             📍 チェックリスト
           </h2>
-          <span style={{ fontSize: '13px', color: 'var(--text-200)' }}>
-            残り: {routeRuns.filter(r => !r.hasRemaining).length} / {routeRuns.length}
-          </span>
         </div>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -269,14 +266,13 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
               style={{
                 padding: '16px 20px',
                 border: '2px solid',
-                borderColor: routeRun.hasRemaining ? 'var(--primary-100)' : 'transparent',
+                borderColor: routeRun.hasRemaining ? 'var(--primary-100)' : 'var(--bg-200)',
                 borderRadius: '16px',
-                backgroundColor: routeRun.hasRemaining ? 'var(--bg-100)' : 'var(--bg-200)',
+                backgroundColor: routeRun.hasRemaining ? 'var(--bg-100)' : 'var(--bg-300)',
                 cursor: 'pointer',
                 transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                boxShadow: routeRun.hasRemaining ? '0 4px 12px rgba(139, 95, 191, 0.1)' : 'none',
-                userSelect: 'none',
-                opacity: !routeRun.hasRemaining ? 0.8 : 1
+                boxShadow: routeRun.hasRemaining ? '0 4px 12px rgba(139, 95, 191, 0.15)' : '0 2px 4px rgba(0,0,0,0.03)',
+                userSelect: 'none'
               }}
               onMouseDown={(e) => {
                 e.currentTarget.style.transform = 'scale(0.99)';
@@ -289,24 +285,26 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
                 <div style={{
                   fontSize: '16px',
                   fontWeight: routeRun.hasRemaining ? '700' : '500',
-                  color: routeRun.hasRemaining ? 'var(--primary-100)' : 'var(--text-200)',
+                  color: routeRun.hasRemaining ? 'var(--primary-100)' : 'var(--text-100)',
                   display: 'flex',
                   alignItems: 'center',
                   gap: '12px'
                 }}>
                   <div style={{ 
-                    width: '24px', 
-                    height: '24px', 
+                    width: '28px', 
+                    height: '28px', 
                     borderRadius: '50%', 
-                    border: routeRun.hasRemaining ? 'none' : '2px solid var(--text-300)',
-                    background: routeRun.hasRemaining ? 'var(--primary-100)' : 'transparent',
+                    border: 'none',
+                    background: routeRun.hasRemaining ? '#FF6B6B' : '#4CAF50',
                     display: 'flex', 
                     alignItems: 'center', 
                     justifyContent: 'center',
                     color: 'white',
-                    fontSize: '12px'
+                    fontSize: '14px',
+                    fontWeight: 'bold',
+                    flexShrink: 0
                   }}>
-                    {routeRun.hasRemaining && '❌'}
+                    {routeRun.hasRemaining ? '✕' : '✓'}
                   </div>
                   {routeRun.routeName}
                 </div>
@@ -320,34 +318,52 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
                     paddingTop: '16px', 
                     borderTop: '1px solid var(--bg-300)', 
                     animation: 'fadeIn 0.3s ease-out',
-                    cursor: 'default'
+                    cursor: 'default',
+                    background: 'var(--bg-300)',
+                    borderRadius: '12px',
+                    padding: '16px',
+                    marginLeft: '-8px',
+                    marginRight: '-8px'
                   }}
                 >
                   <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
                     <div style={{ flex: '0 0 100px' }}>
-                      <label style={{ fontSize: '12px', marginBottom: '6px' }}>狩り残し数</label>
+                      <label style={{ fontSize: '12px', marginBottom: '6px', color: 'var(--text-100)', fontWeight: 'bold' }}>狩り残し数</label>
                       <input
                         type="number"
                         min="0"
                         value={routeRun.remainingCount}
                         onChange={(e) => updateRemainingCount(routeRun.routeId, parseInt(e.target.value) || 0)}
-                        style={{ padding: '10px', textAlign: 'center', fontWeight: 'bold', fontSize: '16px' }}
+                        style={{ 
+                          padding: '12px', 
+                          textAlign: 'center', 
+                          fontWeight: 'bold', 
+                          fontSize: '18px',
+                          background: 'white',
+                          border: '2px solid var(--primary-100)',
+                          boxShadow: '0 2px 8px rgba(139, 95, 191, 0.15)'
+                        }}
                       />
                     </div>
                     <div style={{ flex: 1 }}>
-                      <label style={{ fontSize: '12px', marginBottom: '6px' }}>メモ・理由</label>
+                      <label style={{ fontSize: '12px', marginBottom: '6px', color: 'var(--text-100)', fontWeight: 'bold' }}>メモ・理由</label>
                       <input
                         type="text"
                         value={routeRun.comment}
                         onChange={(e) => updateComment(routeRun.routeId, e.target.value)}
-                        placeholder="タップして入力..."
-                        style={{ padding: '10px' }}
+                        placeholder="理由を入力..."
+                        style={{ 
+                          padding: '12px',
+                          background: 'white',
+                          border: '2px solid var(--accent-100)',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
+                        }}
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label style={{ fontSize: '12px', marginBottom: '8px' }}>クイックタグ</label>
+                    <label style={{ fontSize: '12px', marginBottom: '8px', color: 'var(--text-100)', fontWeight: 'bold' }}>クイックタグ</label>
                     <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
                       {TAGS.map(tag => (
                         <button
@@ -357,24 +373,26 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
                             addTagToComment(routeRun.routeId, tag);
                           }}
                           style={{
-                            background: 'var(--bg-300)',
-                            color: 'var(--text-200)',
-                            padding: '6px 12px',
-                            fontSize: '12px',
-                            borderRadius: '20px',
-                            border: '1px solid var(--bg-300)',
-                            minHeight: '32px',
+                            background: 'white',
+                            color: 'var(--primary-200)',
+                            padding: '8px 14px',
+                            fontSize: '13px',
+                            borderRadius: '8px',
+                            border: '2px solid var(--accent-100)',
+                            minHeight: '36px',
                             fontWeight: '600',
-                            boxShadow: '0 2px 4px rgba(0,0,0,0.02)'
+                            boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'var(--accent-100)';
-                            e.currentTarget.style.color = 'var(--primary-200)';
+                            e.currentTarget.style.background = 'var(--primary-100)';
+                            e.currentTarget.style.color = 'white';
+                            e.currentTarget.style.borderColor = 'var(--primary-100)';
                             e.currentTarget.style.transform = 'translateY(-1px)';
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'var(--bg-300)';
-                            e.currentTarget.style.color = 'var(--text-200)';
+                            e.currentTarget.style.background = 'white';
+                            e.currentTarget.style.color = 'var(--primary-200)';
+                            e.currentTarget.style.borderColor = 'var(--accent-100)';
                             e.currentTarget.style.transform = 'translateY(0)';
                           }}
                         >
