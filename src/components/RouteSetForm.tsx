@@ -87,7 +87,7 @@ export const RouteSetForm = ({ onRouteSetAdded }: RouteSetFormProps) => {
         </div>
         <div style={{ marginBottom: '16px' }}>
           <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: 'var(--text-100)' }}>
-            ルートリスト（一行ずつ入力）
+            ルートリスト (Subsplits対応)
           </label>
           <textarea
             value={routeText}

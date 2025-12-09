@@ -250,6 +250,50 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
             />
           </div>
         </div>
+
+        {/* 狩り残しサマリー */}
+        {routeRuns.filter(r => r.hasRemaining).length > 0 && (
+          <div style={{ 
+            marginTop: '16px', 
+            padding: '12px', 
+            background: 'rgba(255, 107, 107, 0.1)', 
+            borderRadius: '10px',
+            border: '1px solid rgba(255, 107, 107, 0.3)'
+          }}>
+            <div style={{ fontSize: '12px', color: 'var(--text-200)', marginBottom: '8px', fontWeight: 'bold' }}>
+              🎯 狩り残し一覧
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+              {routeRuns.filter(r => r.hasRemaining).map(r => (
+                <span
+                  key={r.routeId}
+                  style={{
+                    background: 'var(--bg-300)',
+                    color: '#FF6B6B',
+                    padding: '4px 10px',
+                    borderRadius: '6px',
+                    fontSize: '12px',
+                    fontWeight: '600',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}
+                >
+                  {r.routeName}
+                  <span style={{ 
+                    background: '#FF6B6B', 
+                    color: 'white', 
+                    padding: '1px 6px', 
+                    borderRadius: '4px',
+                    fontSize: '11px'
+                  }}>
+                    {r.remainingCount}
+                  </span>
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* ルート一覧 */}

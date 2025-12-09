@@ -45,7 +45,7 @@ export const RouteForm = ({ onRouteAdded }: RouteFormProps) => {
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: '16px' }}>
           <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: '#555' }}>
-            ルートリスト
+          ルートリスト (Subsplits対応)
           </label>
           <textarea
             value={routeText}
