@@ -23,20 +23,24 @@ body {
 button {
   cursor: pointer;
   border: none;
-  border-radius: 8px;
-  padding: 12px 24px;
-  font-size: 16px;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 14px;
   font-weight: 600;
   transition: all 0.2s;
+  /* フィッツの法則: タッチターゲットを適切なサイズに */
+  min-height: 40px;
 }
 
 button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 button:active {
   transform: translateY(0);
+  /* ドハティの閾値: 即座の視覚的フィードバック */
+  transition: transform 0.1s;
 }
 
 input, textarea {
@@ -60,10 +64,16 @@ textarea {
 
 .card {
   background: white;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 16px;
+  /* 美的ユーザビリティ効果: 統一感のあるデザイン */
+  transition: box-shadow 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 @media (max-width: 768px) {

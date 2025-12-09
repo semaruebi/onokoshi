@@ -116,16 +116,22 @@ export const saveRoute = async (route: Route): Promise<void> => {
   });
 };
 
-// ルートテンプレートの取得（全件）
+// ルートテンプレートの取得（全件、作成順を保持）
 export const getAllRoutes = async (): Promise<Route[]> => {
   const database = await initDB();
   return new Promise((resolve, reject) => {
     const transaction = database.transaction([ROUTES_STORE], 'readonly');
     const store = transaction.objectStore(ROUTES_STORE);
+    // ID順で取得（IDはタイムスタンプベースなので作成順になる）
     const request = store.getAll();
 
     request.onerror = () => reject(request.error);
-    request.onsuccess = () => resolve(request.result);
+    request.onsuccess = () => {
+      const routes = request.result as Route[];
+      // orderでソート（入力順を保持）
+      routes.sort((a, b) => (a.order || 0) - (b.order || 0));
+      resolve(routes);
+    };
   });
 };
 

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Run, RouteRun, TAGS } from '../types';
 import { saveRun, getAllRoutes } from '../utils/indexedDB';
+import { showSuccessFeedback } from '../utils/feedback';
 
 interface RunEditorProps {
   run: Run;
@@ -80,6 +81,8 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
         updatedAt: new Date().toISOString()
       };
       await saveRun(updatedRun);
+      // ピーク・エンドの法則: 保存成功時にポジティブなフィードバック
+      showSuccessFeedback('保存しました！');
       onSave();
     } catch (error) {
       console.error('RUNの保存に失敗しました:', error);
@@ -125,12 +128,12 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
           </div>
         </div>
 
-        {/* 合計表示 */}
+        {/* 合計表示 - ゲシュタルト原則（近接・同類）に基づいてグループ化 */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-          gap: '16px',
-          marginBottom: '24px'
+          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+          gap: '12px',
+          marginBottom: '20px'
         }}>
           <div>
             <label style={{ display: 'block', fontSize: '14px', color: '#666', marginBottom: '4px' }}>
@@ -175,63 +178,75 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
           </div>
         </div>
 
-        {/* 最終結果 */}
+        {/* 最終結果 - ピーク・エンドの法則: 重要な情報を強調 */}
         <div style={{
           textAlign: 'center',
-          padding: '24px',
+          padding: '16px',
           backgroundColor: '#f0f4ff',
-          borderRadius: '12px',
-          border: '3px solid #667eea'
+          borderRadius: '8px',
+          border: '2px solid #667eea',
+          boxShadow: '0 2px 8px rgba(102, 126, 234, 0.2)'
         }}>
-          <div style={{ fontSize: '14px', color: '#666', marginBottom: '8px' }}>
+          <div style={{ fontSize: '12px', color: '#666', marginBottom: '6px', fontWeight: 600 }}>
             最終結果
           </div>
-          <div style={{ fontSize: '48px', fontWeight: 'bold', color: '#667eea' }}>
+          <div style={{ fontSize: '36px', fontWeight: 'bold', color: '#667eea', marginBottom: '4px' }}>
             {finalCount}
           </div>
-          <div style={{ fontSize: '12px', color: '#666', marginTop: '8px' }}>
+          <div style={{ fontSize: '11px', color: '#999', fontFamily: 'monospace' }}>
             {expectedEliteCount} - {totalRemaining} - {tsurumiShortage} + {adlibAddition}
           </div>
         </div>
       </div>
 
-      {/* ルート一覧 */}
+      {/* ルート一覧 - ミラーの法則: 7±2個のチャンクでグループ化 */}
       <div className="card">
-        <h2 style={{ marginBottom: '16px', color: '#333' }}>ルート一覧</h2>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <h2 style={{ marginBottom: '10px', color: '#333', fontSize: '16px', fontWeight: 'bold' }}>ルート一覧</h2>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', maxHeight: '70vh', overflowY: 'auto' }}>
           {routeRuns.map((routeRun) => (
             <div
               key={routeRun.routeId}
+              onClick={() => toggleRemaining(routeRun.routeId)}
               style={{
-                padding: '16px',
+                padding: '8px 12px',
                 border: '2px solid',
                 borderColor: routeRun.hasRemaining ? '#ff4444' : '#e0e0e0',
-                borderRadius: '8px',
-                backgroundColor: routeRun.hasRemaining ? '#ffe0e0' : '#f9f9f9'
+                borderRadius: '6px',
+                backgroundColor: routeRun.hasRemaining ? '#ffe0e0' : '#f9f9f9',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                // ドハティの閾値: 即座の視覚的フィードバック
+                userSelect: 'none'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = routeRun.hasRemaining ? '#ff6666' : '#667eea';
+                e.currentTarget.style.transform = 'translateX(2px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = routeRun.hasRemaining ? '#ff4444' : '#e0e0e0';
+                e.currentTarget.style.transform = 'translateX(0)';
+              }}
+              onMouseDown={(e) => {
+                e.currentTarget.style.transform = 'scale(0.98)';
+              }}
+              onMouseUp={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-                <button
-                  onClick={() => toggleRemaining(routeRun.routeId)}
-                  style={{
-                    fontSize: '18px',
-                    fontWeight: 'bold',
-                    backgroundColor: 'transparent',
-                    border: 'none',
-                    cursor: 'pointer',
-                    color: routeRun.hasRemaining ? '#ff4444' : '#333',
-                    textAlign: 'left',
-                    padding: 0
-                  }}
-                >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: routeRun.hasRemaining ? '8px' : '0' }}>
+                <div style={{
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  color: routeRun.hasRemaining ? '#ff4444' : '#333'
+                }}>
                   {routeRun.hasRemaining ? '❌' : '✅'} {routeRun.routeName}
-                </button>
+                </div>
               </div>
 
               {routeRun.hasRemaining && (
-                <div>
-                  <div style={{ marginBottom: '12px' }}>
-                    <label style={{ display: 'block', marginBottom: '4px', fontSize: '14px', fontWeight: 600 }}>
+                <div onClick={(e) => e.stopPropagation()}>
+                  <div style={{ marginBottom: '8px' }}>
+                    <label style={{ display: 'block', marginBottom: '4px', fontSize: '12px', fontWeight: 600 }}>
                       仮残し数
                     </label>
                     <input
@@ -239,36 +254,39 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
                       min="0"
                       value={routeRun.remainingCount}
                       onChange={(e) => updateRemainingCount(routeRun.routeId, parseInt(e.target.value) || 0)}
-                      style={{ width: '100px', padding: '8px' }}
+                      style={{ width: '80px', padding: '6px', fontSize: '14px' }}
                     />
                   </div>
 
-                  <div style={{ marginBottom: '12px' }}>
-                    <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', fontWeight: 600 }}>
+                  <div style={{ marginBottom: '8px' }}>
+                    <label style={{ display: 'block', marginBottom: '4px', fontSize: '12px', fontWeight: 600 }}>
                       コメント
                     </label>
                     <textarea
                       value={routeRun.comment}
                       onChange={(e) => updateComment(routeRun.routeId, e.target.value)}
                       placeholder="コメントを入力..."
-                      style={{ width: '100%', minHeight: '80px', padding: '8px' }}
+                      style={{ width: '100%', minHeight: '60px', padding: '6px', fontSize: '13px' }}
                     />
                   </div>
 
                   <div>
-                    <div style={{ fontSize: '14px', marginBottom: '8px', fontWeight: 600 }}>
+                    <div style={{ fontSize: '12px', marginBottom: '6px', fontWeight: 600 }}>
                       タグを追加
                     </div>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                       {TAGS.map(tag => (
                         <button
                           key={tag}
-                          onClick={() => addTagToComment(routeRun.routeId, tag)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            addTagToComment(routeRun.routeId, tag);
+                          }}
                           style={{
                             backgroundColor: '#667eea',
                             color: 'white',
-                            padding: '6px 12px',
-                            fontSize: '12px',
+                            padding: '4px 10px',
+                            fontSize: '11px',
                             borderRadius: '4px'
                           }}
                         >

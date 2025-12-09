@@ -3,6 +3,7 @@ export interface Route {
   id: string;
   name: string;
   count: number; // 精鋭数
+  order: number; // 入力順序
 }
 
 // RUNデータ（プロジェクト単位）

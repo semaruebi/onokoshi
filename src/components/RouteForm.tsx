@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { parseRouteText } from '../utils/routeParser';
 import { saveRoute } from '../utils/indexedDB';
+import { showSuccessFeedback } from '../utils/feedback';
 
 interface RouteFormProps {
   onRouteAdded: () => void;
@@ -30,7 +31,8 @@ export const RouteForm = ({ onRouteAdded }: RouteFormProps) => {
       }
       setRouteText('');
       onRouteAdded();
-      alert('ルートを登録しました！');
+      // ピーク・エンドの法則: ポジティブなフィードバック
+      showSuccessFeedback('ルートを登録しました！');
     } catch (error) {
       console.error('ルートの保存に失敗しました:', error);
       alert('ルートの保存に失敗しました');
