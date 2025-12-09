@@ -321,19 +321,17 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'space-between',
+                gap: '8px',
                 marginBottom: isCollapsed ? 0 : '6px'
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ fontSize: '14px' }}>{isCollapsed ? '▶' : '▼'}</span>
-                <span style={{ fontWeight: 'bold', color: 'var(--text-100)', fontSize: '14px' }}>
-                  {rr.groupName}
-                </span>
-                <span style={{ fontSize: '12px', color: 'var(--text-200)' }}>
-                  ({groupRoutes.length})
-                </span>
-              </div>
+              <span style={{ fontSize: '14px' }}>{isCollapsed ? '▶' : '▼'}</span>
+              <span style={{ fontWeight: 'bold', color: 'var(--text-100)', fontSize: '14px' }}>
+                {rr.groupName}
+              </span>
+              <span style={{ fontSize: '12px', color: 'var(--text-200)' }}>
+                ({groupRoutes.length})
+              </span>
               {groupRemaining > 0 && (
                 <span style={{ 
                   background: '#FF6B6B', 
@@ -446,7 +444,7 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
                   type="text"
                   value={routeRun.comment}
                   onChange={(e) => updateComment(routeRun.routeId, e.target.value)}
-                  placeholder="理由..."
+                  placeholder="理由、精鋭名など..."
                   style={{ 
                     padding: '8px',
                     background: 'var(--bg-200)',
