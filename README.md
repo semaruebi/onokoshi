@@ -94,7 +94,7 @@ npm run build
 
 このアプリはGitHub Pagesで公開されています。
 
-**公開URL**: https://semaruebi.github.io/hunt-checker/
+**公開URL**: https://semaruebi.github.io/onokoshi/
 
 ### デプロイ方法
 
