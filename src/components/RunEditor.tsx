@@ -115,13 +115,13 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
           <div style={{ display: 'flex', gap: '8px' }}>
             <button
               onClick={onCancel}
-              style={{ backgroundColor: '#999', color: 'white' }}
+              className="secondary-button"
             >
               キャンセル
             </button>
             <button
               onClick={handleSave}
-              style={{ backgroundColor: '#4caf50', color: 'white' }}
+              className="primary-button"
             >
               保存
             </button>
@@ -150,7 +150,7 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
             <div style={{ fontSize: '14px', color: '#666', marginBottom: '4px' }}>
               狩り残し総数
             </div>
-            <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#ff4444' }}>
+            <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#ff6b9d' }}>
               {totalRemaining}
             </div>
           </div>
@@ -182,15 +182,15 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
         <div style={{
           textAlign: 'center',
           padding: '16px',
-          backgroundColor: '#f0f4ff',
-          borderRadius: '8px',
-          border: '2px solid #667eea',
-          boxShadow: '0 2px 8px rgba(102, 126, 234, 0.2)'
+          background: 'linear-gradient(135deg, #fff5f5 0%, #ffeef0 100%)',
+          borderRadius: '12px',
+          border: '2px solid #ff9a9e',
+          boxShadow: '0 2px 12px rgba(255, 154, 158, 0.2)'
         }}>
           <div style={{ fontSize: '12px', color: '#666', marginBottom: '6px', fontWeight: 600 }}>
             最終結果
           </div>
-          <div style={{ fontSize: '36px', fontWeight: 'bold', color: '#667eea', marginBottom: '4px' }}>
+          <div style={{ fontSize: '36px', fontWeight: 'bold', color: '#ff6b9d', marginBottom: '4px' }}>
             {finalCount}
           </div>
           <div style={{ fontSize: '11px', color: '#999', fontFamily: 'monospace' }}>
@@ -210,20 +210,20 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
               style={{
                 padding: '8px 12px',
                 border: '2px solid',
-                borderColor: routeRun.hasRemaining ? '#ff4444' : '#e0e0e0',
-                borderRadius: '6px',
-                backgroundColor: routeRun.hasRemaining ? '#ffe0e0' : '#f9f9f9',
+                borderColor: routeRun.hasRemaining ? '#ff9a9e' : 'rgba(255, 154, 158, 0.3)',
+                borderRadius: '10px',
+                backgroundColor: routeRun.hasRemaining ? '#fff5f5' : '#fafafa',
                 cursor: 'pointer',
                 transition: 'all 0.2s',
                 // ドハティの閾値: 即座の視覚的フィードバック
                 userSelect: 'none'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = routeRun.hasRemaining ? '#ff6666' : '#667eea';
+                e.currentTarget.style.borderColor = routeRun.hasRemaining ? '#ff6b9d' : '#ff9a9e';
                 e.currentTarget.style.transform = 'translateX(2px)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = routeRun.hasRemaining ? '#ff4444' : '#e0e0e0';
+                e.currentTarget.style.borderColor = routeRun.hasRemaining ? '#ff9a9e' : 'rgba(255, 154, 158, 0.3)';
                 e.currentTarget.style.transform = 'translateX(0)';
               }}
               onMouseDown={(e) => {
@@ -237,7 +237,7 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
                 <div style={{
                   fontSize: '14px',
                   fontWeight: 'bold',
-                  color: routeRun.hasRemaining ? '#ff4444' : '#333'
+                  color: routeRun.hasRemaining ? '#ff6b9d' : '#333'
                 }}>
                   {routeRun.hasRemaining ? '❌' : '✅'} {routeRun.routeName}
                 </div>
@@ -283,11 +283,12 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
                             addTagToComment(routeRun.routeId, tag);
                           }}
                           style={{
-                            backgroundColor: '#667eea',
+                            background: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
                             color: 'white',
                             padding: '4px 10px',
                             fontSize: '11px',
-                            borderRadius: '4px'
+                            borderRadius: '6px',
+                            boxShadow: '0 1px 4px rgba(255, 154, 158, 0.3)'
                           }}
                         >
                           {tag}

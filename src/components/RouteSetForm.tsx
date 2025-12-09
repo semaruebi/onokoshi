@@ -1,0 +1,98 @@
+import { useState } from 'react';
+import { RouteSet } from '../types';
+import { parseRouteText } from '../utils/routeParser';
+import { saveRouteSet, generateId } from '../utils/indexedDB';
+import { showSuccessFeedback } from '../utils/feedback';
+
+interface RouteSetFormProps {
+  onRouteSetAdded: () => void;
+}
+
+export const RouteSetForm = ({ onRouteSetAdded }: RouteSetFormProps) => {
+  const [routeSetName, setRouteSetName] = useState('');
+  const [routeText, setRouteText] = useState('');
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!routeSetName.trim()) {
+      alert('ルートセット名を入力してください');
+      return;
+    }
+
+    if (!routeText.trim()) {
+      alert('ルートリストを入力してください');
+      return;
+    }
+
+    const routes = parseRouteText(routeText);
+    if (routes.length === 0) {
+      alert('有効なルートを入力してください');
+      return;
+    }
+
+    try {
+      const now = new Date().toISOString();
+      const routeSet: RouteSet = {
+        id: generateId(),
+        name: routeSetName.trim(),
+        routes,
+        createdAt: now,
+        updatedAt: now
+      };
+
+      await saveRouteSet(routeSet);
+      setRouteSetName('');
+      setRouteText('');
+      onRouteSetAdded();
+      showSuccessFeedback('ルートセットを登録しました！');
+    } catch (error) {
+      console.error('ルートセットの保存に失敗しました:', error);
+      alert('ルートセットの保存に失敗しました');
+    }
+  };
+
+  return (
+    <div className="card">
+      <h2 style={{ marginBottom: '16px', color: '#333', fontSize: '18px', fontWeight: 'bold' }}>
+        🗺️ ルートセットを登録
+      </h2>
+      <form onSubmit={handleSubmit}>
+        <div style={{ marginBottom: '16px' }}>
+          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: '#555' }}>
+            ルートセット名
+          </label>
+          <input
+            type="text"
+            value={routeSetName}
+            onChange={(e) => setRouteSetName(e.target.value)}
+            placeholder="例: 今日のRTAルート"
+            style={{ width: '100%', padding: '10px', fontSize: '14px' }}
+          />
+        </div>
+        <div style={{ marginBottom: '16px' }}>
+          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: '#555' }}>
+            ルートリスト（一行ずつ入力）
+          </label>
+          <textarea
+            value={routeText}
+            onChange={(e) => setRouteText(e.target.value)}
+            placeholder="かつヴァナ 5&#10;聖遺殿 8&#10;..."
+            style={{ width: '100%', minHeight: '120px', padding: '10px', fontSize: '14px' }}
+          />
+          <div style={{ marginTop: '8px', fontSize: '13px', color: '#666' }}>
+            形式: ルート名 精鋭数（例: かつヴァナ 5）
+          </div>
+        </div>
+        <button
+          type="submit"
+          className="primary-button"
+          style={{ width: '100%' }}
+        >
+          ルートセットを登録
+        </button>
+      </form>
+    </div>
+  );
+};
+

@@ -1,20 +1,23 @@
 import { useState, useEffect } from 'react';
-import { Run } from './types';
-import { getAllRuns, generateId, getAllRoutes, saveRun } from './utils/indexedDB';
-import { RouteForm } from './components/RouteForm';
+import { Run, RouteSet } from './types';
+import { getAllRuns, generateId, getAllRouteSets, saveRun } from './utils/indexedDB';
+import { RouteSetForm } from './components/RouteSetForm';
+import { RouteSetSelector } from './components/RouteSetSelector';
 import { RunList } from './components/RunList';
 import { RunEditor } from './components/RunEditor';
 import { Statistics } from './components/Statistics';
 
-type ViewMode = 'home' | 'edit' | 'statistics';
+type ViewMode = 'home' | 'edit' | 'statistics' | 'selectRouteSet';
 
 function App() {
   const [runs, setRuns] = useState<Run[]>([]);
+  const [routeSets, setRouteSets] = useState<RouteSet[]>([]);
   const [selectedRun, setSelectedRun] = useState<Run | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('home');
 
   useEffect(() => {
     loadRuns();
+    loadRouteSets();
   }, []);
 
   const loadRuns = async () => {
@@ -26,14 +29,25 @@ function App() {
     }
   };
 
-  const handleCreateNewRun = async () => {
+  const loadRouteSets = async () => {
     try {
-      const routes = await getAllRoutes();
-      if (routes.length === 0) {
-        alert('まずルート情報を登録してください');
-        return;
-      }
+      const loadedRouteSets = await getAllRouteSets();
+      setRouteSets(loadedRouteSets);
+    } catch (error) {
+      console.error('ルートセットの読み込みに失敗しました:', error);
+    }
+  };
 
+  const handleCreateNewRun = () => {
+    if (routeSets.length === 0) {
+      alert('まずルートセットを登録してください');
+      return;
+    }
+    setViewMode('selectRouteSet');
+  };
+
+  const handleRouteSetSelect = async (routeSet: RouteSet) => {
+    try {
       const now = new Date();
       const dateStr = now.toISOString().split('T')[0].replace(/-/g, '-');
       const runName = `${dateStr} RUN`;
@@ -43,7 +57,7 @@ function App() {
         name: runName,
         createdAt: now.toISOString(),
         updatedAt: now.toISOString(),
-        routes: routes.map(route => ({
+        routes: routeSet.routes.map(route => ({
           routeId: route.id,
           routeName: route.name,
           hasRemaining: false,
@@ -85,15 +99,34 @@ function App() {
   return (
     <div>
       {/* ヘッダー */}
-      <div style={{ 
-        textAlign: 'center', 
-        marginBottom: '32px',
-        color: 'white'
-      }}>
-        <h1 style={{ fontSize: '32px', marginBottom: '8px', fontWeight: 'bold' }}>
+      <div 
+        onClick={() => {
+          setViewMode('home');
+          setSelectedRun(null);
+        }}
+        style={{ 
+          textAlign: 'center', 
+          marginBottom: '32px',
+          cursor: 'pointer',
+          transition: 'all 0.2s',
+          padding: '20px',
+          borderRadius: '16px',
+          background: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)',
+          boxShadow: '0 4px 16px rgba(255, 154, 158, 0.3)'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'translateY(-2px)';
+          e.currentTarget.style.boxShadow = '0 6px 20px rgba(255, 154, 158, 0.4)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'translateY(0)';
+          e.currentTarget.style.boxShadow = '0 4px 16px rgba(255, 154, 158, 0.3)';
+        }}
+      >
+        <h1 style={{ fontSize: '32px', marginBottom: '8px', fontWeight: 'bold', color: 'white' }}>
           お残しは許しまへんday
         </h1>
-        <p style={{ fontSize: '16px', opacity: 0.9 }}>
+        <p style={{ fontSize: '16px', color: 'white', opacity: 0.95 }}>
           狩り残し確認・記録ツール
         </p>
       </div>
@@ -134,25 +167,27 @@ function App() {
           <div className="card" style={{ marginBottom: '20px' }}>
             <button
               onClick={handleCreateNewRun}
-              style={{
-                backgroundColor: '#667eea',
-                color: 'white',
-                width: '100%',
-                padding: '16px',
-                fontSize: '18px',
-                fontWeight: 'bold'
-              }}
+              className="primary-button"
+              style={{ width: '100%', padding: '14px', fontSize: '16px', fontWeight: 'bold' }}
             >
               ➕ 新規作成
             </button>
           </div>
-          <RouteForm onRouteAdded={loadRuns} />
+          <RouteSetForm onRouteSetAdded={loadRouteSets} />
           <RunList
             runs={runs}
             onRunSelect={handleRunSelect}
             onRunDeleted={loadRuns}
           />
         </>
+      )}
+
+      {viewMode === 'selectRouteSet' && (
+        <RouteSetSelector
+          routeSets={routeSets}
+          onSelect={handleRouteSetSelect}
+          onCancel={() => setViewMode('home')}
+        />
       )}
 
       {viewMode === 'edit' && selectedRun && (

@@ -1,9 +1,10 @@
-import { Run, Route } from '../types';
+import { Run, Route, RouteSet } from '../types';
 
 const DB_NAME = 'onokoshi-db';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 const RUNS_STORE = 'runs';
 const ROUTES_STORE = 'routes';
+const ROUTE_SETS_STORE = 'routeSets';
 
 let db: IDBDatabase | null = null;
 
@@ -40,6 +41,13 @@ export const initDB = (): Promise<IDBDatabase> => {
       if (!database.objectStoreNames.contains(ROUTES_STORE)) {
         const routesStore = database.createObjectStore(ROUTES_STORE, { keyPath: 'id' });
         routesStore.createIndex('name', 'name', { unique: false });
+      }
+
+      // routeSetsストアの作成（ルートセット）
+      if (!database.objectStoreNames.contains(ROUTE_SETS_STORE)) {
+        const routeSetsStore = database.createObjectStore(ROUTE_SETS_STORE, { keyPath: 'id' });
+        routeSetsStore.createIndex('name', 'name', { unique: false });
+        routeSetsStore.createIndex('createdAt', 'createdAt', { unique: false });
       }
     };
   });
@@ -141,6 +149,63 @@ export const deleteRoute = async (id: string): Promise<void> => {
   return new Promise((resolve, reject) => {
     const transaction = database.transaction([ROUTES_STORE], 'readwrite');
     const store = transaction.objectStore(ROUTES_STORE);
+    const request = store.delete(id);
+
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve();
+  });
+};
+
+// ルートセットの保存
+export const saveRouteSet = async (routeSet: RouteSet): Promise<void> => {
+  const database = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = database.transaction([ROUTE_SETS_STORE], 'readwrite');
+    const store = transaction.objectStore(ROUTE_SETS_STORE);
+    const request = store.put(routeSet);
+
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve();
+  });
+};
+
+// ルートセットの取得（全件）
+export const getAllRouteSets = async (): Promise<RouteSet[]> => {
+  const database = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = database.transaction([ROUTE_SETS_STORE], 'readonly');
+    const store = transaction.objectStore(ROUTE_SETS_STORE);
+    const index = store.index('createdAt');
+    const request = index.getAll();
+
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => {
+      const routeSets = request.result as RouteSet[];
+      routeSets.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      resolve(routeSets);
+    };
+  });
+};
+
+// ルートセットの取得（1件）
+export const getRouteSet = async (id: string): Promise<RouteSet | undefined> => {
+  const database = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = database.transaction([ROUTE_SETS_STORE], 'readonly');
+    const store = transaction.objectStore(ROUTE_SETS_STORE);
+    const request = store.get(id);
+
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => resolve(request.result);
+  });
+};
+
+// ルートセットの削除
+export const deleteRouteSet = async (id: string): Promise<void> => {
+  const database = await initDB();
+  return new Promise((resolve, reject) => {
+    const transaction = database.transaction([ROUTE_SETS_STORE], 'readwrite');
+    const store = transaction.objectStore(ROUTE_SETS_STORE);
     const request = store.delete(id);
 
     request.onerror = () => reject(request.error);

@@ -6,6 +6,15 @@ export interface Route {
   order: number; // 入力順序
 }
 
+// ルートセット（名前付きルートグループ）
+export interface RouteSet {
+  id: string;
+  name: string; // ルートセット名
+  routes: Route[];
+  createdAt: string;
+  updatedAt: string;
+}
+
 // RUNデータ（プロジェクト単位）
 export interface Run {
   id: string;
