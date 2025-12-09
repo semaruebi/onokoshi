@@ -1,5 +1,8 @@
+import { useState } from 'react';
 import { RouteSet } from '../types';
-import { deleteRouteSet } from '../utils/indexedDB';
+import { deleteRouteSet, saveRouteSet } from '../utils/indexedDB';
+import { parseRouteText } from '../utils/routeParser';
+import { showSuccessFeedback } from '../utils/feedback';
 
 interface RouteSetSelectorProps {
   routeSets: RouteSet[];
@@ -9,6 +12,11 @@ interface RouteSetSelectorProps {
 }
 
 export const RouteSetSelector = ({ routeSets, onSelect, onCancel, onRouteSetDeleted }: RouteSetSelectorProps) => {
+  const [editingRouteSet, setEditingRouteSet] = useState<RouteSet | null>(null);
+  const [editName, setEditName] = useState('');
+  const [editExpectedCount, setEditExpectedCount] = useState(0);
+  const [editRouteText, setEditRouteText] = useState('');
+
   const handleDelete = async (e: React.MouseEvent, routeSetId: string) => {
     e.stopPropagation();
     if (confirm('このルートセットを削除しますか？')) {
@@ -22,6 +30,51 @@ export const RouteSetSelector = ({ routeSets, onSelect, onCancel, onRouteSetDele
     }
   };
 
+  const handleEdit = (e: React.MouseEvent, routeSet: RouteSet) => {
+    e.stopPropagation();
+    setEditingRouteSet(routeSet);
+    setEditName(routeSet.name);
+    setEditExpectedCount(routeSet.expectedEliteCount);
+    // ルートをテキスト形式に変換
+    const routeText = routeSet.routes.map(r => {
+      const prefix = r.groupName ? `-${r.name}` : r.name;
+      return r.count > 0 ? `${prefix}(${r.count})` : prefix;
+    }).join('\n');
+    setEditRouteText(routeText);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingRouteSet) return;
+    
+    if (!editName.trim()) {
+      alert('ルートセット名を入力してください');
+      return;
+    }
+
+    const routes = parseRouteText(editRouteText);
+    if (routes.length === 0) {
+      alert('有効なルートを入力してください');
+      return;
+    }
+
+    try {
+      const updatedRouteSet: RouteSet = {
+        ...editingRouteSet,
+        name: editName.trim(),
+        expectedEliteCount: editExpectedCount,
+        routes,
+        updatedAt: new Date().toISOString()
+      };
+      await saveRouteSet(updatedRouteSet);
+      setEditingRouteSet(null);
+      onRouteSetDeleted(); // リロード
+      showSuccessFeedback('ルートセットを更新しました！');
+    } catch (error) {
+      console.error('ルートセットの更新に失敗しました:', error);
+      alert('ルートセットの更新に失敗しました');
+    }
+  };
+
   if (routeSets.length === 0) {
     return (
       <div className="card" style={{ textAlign: 'center', padding: '40px' }}>
@@ -31,6 +84,70 @@ export const RouteSetSelector = ({ routeSets, onSelect, onCancel, onRouteSetDele
         <button onClick={onCancel} className="secondary-button" style={{ width: '100%' }}>
           戻る
         </button>
+      </div>
+    );
+  }
+
+  // 編集モーダル
+  if (editingRouteSet) {
+    return (
+      <div className="card" style={{ maxWidth: '600px', margin: '0 auto' }}>
+        <h2 style={{ marginBottom: '20px', color: 'var(--text-100)', fontSize: '18px', fontWeight: 'bold' }}>
+          ✏️ ルートセットを編集
+        </h2>
+        
+        <div style={{ marginBottom: '16px' }}>
+          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: 'var(--text-100)' }}>
+            ルートセット名
+          </label>
+          <input
+            type="text"
+            value={editName}
+            onChange={(e) => setEditName(e.target.value)}
+            style={{ width: '100%', padding: '12px', fontSize: '14px' }}
+          />
+        </div>
+
+        <div style={{ marginBottom: '16px' }}>
+          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: 'var(--text-100)' }}>
+            想定精鋭数
+          </label>
+          <input
+            type="number"
+            value={editExpectedCount || ''}
+            onChange={(e) => setEditExpectedCount(parseInt(e.target.value) || 0)}
+            style={{ width: '100%', padding: '12px', fontSize: '14px' }}
+          />
+        </div>
+
+        <div style={{ marginBottom: '16px' }}>
+          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: 'var(--text-100)' }}>
+            ルートリスト
+          </label>
+          <textarea
+            value={editRouteText}
+            onChange={(e) => setEditRouteText(e.target.value)}
+            style={{ width: '100%', minHeight: '200px', padding: '12px', fontSize: '14px' }}
+          />
+          <div style={{ marginTop: '8px', fontSize: '12px', color: 'var(--text-200)' }}>
+            形式: ルート名(精鋭数) または -ルート名(精鋭数)
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: '12px', justifyContent: 'flex-end' }}>
+          <button
+            onClick={() => setEditingRouteSet(null)}
+            className="secondary-button"
+          >
+            キャンセル
+          </button>
+          <button
+            onClick={handleSaveEdit}
+            className="primary-button"
+          >
+            保存
+          </button>
+        </div>
       </div>
     );
   }
@@ -90,7 +207,29 @@ export const RouteSetSelector = ({ routeSets, onSelect, onCancel, onRouteSetDele
               </div>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '16px' }}>
+              <button
+                onClick={(e) => handleEdit(e, routeSet)}
+                style={{
+                  background: 'var(--bg-200)',
+                  color: 'var(--text-100)',
+                  fontSize: '12px',
+                  padding: '6px 12px',
+                  borderRadius: '8px',
+                  minHeight: 'auto',
+                  border: '1px solid var(--accent-100)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'var(--primary-100)';
+                  e.currentTarget.style.color = 'var(--primary-300)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'var(--bg-200)';
+                  e.currentTarget.style.color = 'var(--text-100)';
+                }}
+              >
+                編集
+              </button>
               <button
                 onClick={(e) => handleDelete(e, routeSet.id)}
                 style={{
