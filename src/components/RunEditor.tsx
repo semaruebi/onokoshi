@@ -379,8 +379,24 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
           borderRadius: '10px',
           backgroundColor: routeRun.hasRemaining ? 'var(--bg-100)' : 'var(--bg-300)',
           cursor: 'pointer',
-          transition: 'all 0.2s',
+          transition: 'all 0.15s ease-out',
           userSelect: 'none'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.transform = 'translateX(4px)';
+          e.currentTarget.style.boxShadow = '0 2px 8px rgba(139, 95, 191, 0.15)';
+          e.currentTarget.style.borderColor = 'var(--primary-100)';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.transform = 'translateX(0)';
+          e.currentTarget.style.boxShadow = 'none';
+          e.currentTarget.style.borderColor = routeRun.hasRemaining ? 'var(--primary-100)' : 'var(--bg-200)';
+        }}
+        onMouseDown={(e) => {
+          e.currentTarget.style.transform = 'translateX(2px) scale(0.98)';
+        }}
+        onMouseUp={(e) => {
+          e.currentTarget.style.transform = 'translateX(4px) scale(1)';
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
