@@ -188,8 +188,9 @@ function App() {
           <button
             onClick={() => setViewMode('home')}
             style={{
-              backgroundColor: viewMode === 'home' ? '#667eea' : '#999',
-              color: 'white'
+              backgroundColor: viewMode === 'home' ? 'var(--primary-100)' : 'var(--bg-200)',
+              color: viewMode === 'home' ? 'var(--primary-300)' : 'var(--text-200)',
+              border: viewMode === 'home' ? 'none' : '1px solid var(--accent-100)'
             }}
           >
             🏠 ホーム
@@ -197,8 +198,9 @@ function App() {
           <button
             onClick={() => setViewMode('statistics')}
             style={{
-              backgroundColor: viewMode === 'statistics' ? '#667eea' : '#999',
-              color: 'white'
+              backgroundColor: viewMode === 'statistics' ? 'var(--primary-100)' : 'var(--bg-200)',
+              color: viewMode === 'statistics' ? 'var(--primary-300)' : 'var(--text-200)',
+              border: viewMode === 'statistics' ? 'none' : '1px solid var(--accent-100)'
             }}
           >
             📊 統計

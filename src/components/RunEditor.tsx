@@ -108,32 +108,44 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
 
   return (
     <div className={isCompleted ? 'animate-pop-in' : 'animate-slide-in'}>
-      {/* ボタンバー - 常に上部に固定 */}
-      <div style={{ 
-        display: 'flex', 
-        gap: '8px', 
-        marginBottom: '16px',
-        justifyContent: 'flex-end',
-        flexWrap: 'nowrap'
-      }}>
-        <button
-          onClick={onCancel}
-          className="secondary-button"
-          style={{ minHeight: '40px', padding: '0 16px', fontSize: '14px', whiteSpace: 'nowrap' }}
-        >
-          キャンセル
-        </button>
-        <button
-          onClick={handleSave}
-          className="primary-button"
-          style={{ minHeight: '40px', padding: '0 20px', fontSize: '14px', whiteSpace: 'nowrap' }}
-        >
-          保存
-        </button>
-      </div>
-
-      {/* メインカード */}
-      <div className="card" style={{ marginBottom: '16px', border: '1px solid var(--primary-100)', boxShadow: '0 4px 16px rgba(139, 95, 191, 0.1)', padding: '16px' }}>
+      {/* メインカード - スクロール追従 */}
+      <div 
+        className="card" 
+        style={{ 
+          marginBottom: '16px', 
+          border: '1px solid var(--primary-100)', 
+          boxShadow: '0 4px 16px rgba(139, 95, 191, 0.1)', 
+          padding: '16px',
+          position: 'sticky',
+          top: '8px',
+          zIndex: 100,
+          backdropFilter: 'blur(8px)',
+          backgroundColor: 'var(--bg-300)'
+        }}
+      >
+        {/* ボタンバー */}
+        <div style={{ 
+          display: 'flex', 
+          gap: '8px', 
+          marginBottom: '12px',
+          justifyContent: 'flex-end',
+          flexWrap: 'nowrap'
+        }}>
+          <button
+            onClick={onCancel}
+            className="secondary-button"
+            style={{ minHeight: '36px', padding: '0 14px', fontSize: '13px', whiteSpace: 'nowrap' }}
+          >
+            キャンセル
+          </button>
+          <button
+            onClick={handleSave}
+            className="primary-button"
+            style={{ minHeight: '36px', padding: '0 18px', fontSize: '13px', whiteSpace: 'nowrap' }}
+          >
+            保存
+          </button>
+        </div>
         {/* RUN名 */}
         <input
           type="text"
