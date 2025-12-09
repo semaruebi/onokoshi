@@ -4,6 +4,7 @@ export interface Route {
   name: string;
   count: number; // 精鋭数
   order: number; // 入力順序
+  groupName?: string; // グループ名（オプション）
 }
 
 // ルートセット（名前付きルートグループ）
@@ -35,6 +36,7 @@ export interface RouteRun {
   hasRemaining: boolean; // 仮残しの有無
   remainingCount: number; // 仮残しの数
   comment: string; // コメント（自由入力 + タグ）
+  groupName?: string; // グループ名（オプション）
 }
 
 // タグ定義

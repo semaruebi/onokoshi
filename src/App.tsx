@@ -76,7 +76,8 @@ function App() {
           routeName: route.name,
           hasRemaining: false,
           remainingCount: 0,
-          comment: ''
+          comment: '',
+          groupName: route.groupName
         })),
         expectedEliteCount: routeSet.expectedEliteCount || 0,
         tsurumiShortage: 0,

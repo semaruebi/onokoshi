@@ -17,6 +17,7 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
   const [adlibAddition, setAdlibAddition] = useState(run.adlibAddition);
   const [routeRuns, setRouteRuns] = useState<RouteRun[]>(run.routes);
   const [isCompleted, setIsCompleted] = useState(false);
+  const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     loadRoutes();
@@ -252,162 +253,237 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
       </div>
 
       {/* ルート一覧 */}
-      <div className="card" style={{ padding: '24px 32px' }}>
-        <div style={{ marginBottom: '20px' }}>
+      <div className="card" style={{ padding: '16px' }}>
+        <div style={{ marginBottom: '16px' }}>
           <h2 style={{ color: 'var(--text-100)', fontSize: '18px', fontWeight: 'bold' }}>
             📍 チェックリスト
           </h2>
         </div>
         
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {routeRuns.map((routeRun) => (
-            <div
-              key={routeRun.routeId}
-              className="route-item"
-              onClick={() => toggleRemaining(routeRun.routeId)}
-              style={{
-                padding: '16px 20px',
-                border: '2px solid',
-                borderColor: routeRun.hasRemaining ? 'var(--primary-100)' : 'var(--bg-200)',
-                borderRadius: '16px',
-                backgroundColor: routeRun.hasRemaining ? 'var(--bg-100)' : 'var(--bg-300)',
-                cursor: 'pointer',
-                transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-                boxShadow: routeRun.hasRemaining ? '0 4px 12px rgba(139, 95, 191, 0.15)' : '0 2px 4px rgba(0,0,0,0.03)',
-                userSelect: 'none'
-              }}
-              onMouseDown={(e) => {
-                e.currentTarget.style.transform = 'scale(0.99)';
-              }}
-              onMouseUp={(e) => {
-                e.currentTarget.style.transform = 'scale(1)';
-              }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <div style={{
-                  fontSize: '16px',
-                  fontWeight: routeRun.hasRemaining ? '700' : '500',
-                  color: routeRun.hasRemaining ? 'var(--primary-100)' : 'var(--text-100)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px'
-                }}>
-                  <div style={{ 
-                    width: '28px', 
-                    height: '28px', 
-                    borderRadius: '50%', 
-                    border: 'none',
-                    background: routeRun.hasRemaining ? '#FF6B6B' : '#4CAF50',
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    color: 'white',
-                    fontSize: '14px',
-                    fontWeight: 'bold',
-                    flexShrink: 0
-                  }}>
-                    {routeRun.hasRemaining ? '✕' : '✓'}
-                  </div>
-                  {routeRun.routeName}
-                </div>
-              </div>
-
-              {routeRun.hasRemaining && (
-                <div 
-                  onClick={(e) => e.stopPropagation()}
-                  style={{ 
-                    marginTop: '16px', 
-                    paddingTop: '16px', 
-                    borderTop: '1px solid var(--bg-300)', 
-                    animation: 'fadeIn 0.3s ease-out',
-                    cursor: 'default',
-                    background: 'var(--bg-300)',
-                    borderRadius: '12px',
-                    padding: '16px',
-                    marginLeft: '-8px',
-                    marginRight: '-8px'
-                  }}
-                >
-                  <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', flexWrap: 'wrap' }}>
-                    <div style={{ flex: '0 0 80px' }}>
-                      <label style={{ fontSize: '12px', marginBottom: '6px', color: 'var(--text-100)', fontWeight: 'bold', display: 'block' }}>狩り残し数</label>
-                      <input
-                        type="number"
-                        min="0"
-                        value={routeRun.remainingCount}
-                        onChange={(e) => updateRemainingCount(routeRun.routeId, parseInt(e.target.value) || 0)}
-                        style={{ 
-                          padding: '10px', 
-                          textAlign: 'center', 
-                          fontWeight: 'bold', 
-                          fontSize: '16px',
-                          background: 'var(--bg-200)',
-                          color: 'var(--text-100)',
-                          border: '2px solid var(--primary-100)',
-                          borderRadius: '8px'
-                        }}
-                      />
-                    </div>
-                    <div style={{ flex: 1, minWidth: '150px' }}>
-                      <label style={{ fontSize: '12px', marginBottom: '6px', color: 'var(--text-100)', fontWeight: 'bold', display: 'block' }}>メモ・理由</label>
-                      <input
-                        type="text"
-                        value={routeRun.comment}
-                        onChange={(e) => updateComment(routeRun.routeId, e.target.value)}
-                        placeholder="理由を入力..."
-                        style={{ 
-                          padding: '10px',
-                          background: 'var(--bg-200)',
-                          color: 'var(--text-100)',
-                          border: '2px solid var(--accent-100)',
-                          borderRadius: '8px'
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label style={{ fontSize: '12px', marginBottom: '8px', color: 'var(--text-100)', fontWeight: 'bold', display: 'block' }}>クイックタグ</label>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                      {TAGS.map(tag => (
-                        <button
-                          key={tag}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            addTagToComment(routeRun.routeId, tag);
-                          }}
-                          style={{
-                            background: 'var(--bg-200)',
-                            color: 'var(--text-100)',
-                            padding: '6px 12px',
-                            fontSize: '12px',
-                            borderRadius: '6px',
-                            border: '1px solid var(--accent-100)',
-                            minHeight: '32px',
-                            fontWeight: '600'
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'var(--primary-100)';
-                            e.currentTarget.style.color = 'var(--primary-300)';
-                            e.currentTarget.style.borderColor = 'var(--primary-100)';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'var(--bg-200)';
-                            e.currentTarget.style.color = 'var(--text-100)';
-                            e.currentTarget.style.borderColor = 'var(--accent-100)';
-                          }}
-                        >
-                          {tag}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          {renderGroupedRoutes()}
         </div>
       </div>
     </div>
   );
+
+  // グループ化されたルートを表示
+  function renderGroupedRoutes() {
+    // グループを抽出
+    const groups = new Map<string, RouteRun[]>();
+    const ungrouped: RouteRun[] = [];
+    
+    routeRuns.forEach(rr => {
+      if (rr.groupName) {
+        if (!groups.has(rr.groupName)) {
+          groups.set(rr.groupName, []);
+        }
+        groups.get(rr.groupName)!.push(rr);
+      } else {
+        ungrouped.push(rr);
+      }
+    });
+
+    const elements: React.ReactNode[] = [];
+
+    // グループがない場合は従来通り表示
+    if (groups.size === 0) {
+      return routeRuns.map(rr => renderRouteItem(rr));
+    }
+
+    // ルートを順番に処理し、グループヘッダーを挿入
+    const processedGroups = new Set<string>();
+    
+    routeRuns.forEach((rr, idx) => {
+      if (rr.groupName && !processedGroups.has(rr.groupName)) {
+        // グループヘッダーを追加
+        const groupRoutes = groups.get(rr.groupName) || [];
+        const groupRemaining = groupRoutes.reduce((sum, r) => sum + r.remainingCount, 0);
+        const isCollapsed = collapsedGroups.has(rr.groupName);
+
+        elements.push(
+          <div key={`group-${rr.groupName}`} style={{ marginTop: idx > 0 ? '8px' : 0 }}>
+            {/* グループヘッダー */}
+            <div
+              onClick={() => {
+                const newCollapsed = new Set(collapsedGroups);
+                if (isCollapsed) {
+                  newCollapsed.delete(rr.groupName!);
+                } else {
+                  newCollapsed.add(rr.groupName!);
+                }
+                setCollapsedGroups(newCollapsed);
+              }}
+              style={{
+                padding: '10px 14px',
+                background: 'var(--accent-100)',
+                borderRadius: '10px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginBottom: isCollapsed ? 0 : '6px'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '14px' }}>{isCollapsed ? '▶' : '▼'}</span>
+                <span style={{ fontWeight: 'bold', color: 'var(--text-100)', fontSize: '14px' }}>
+                  {rr.groupName}
+                </span>
+                <span style={{ fontSize: '12px', color: 'var(--text-200)' }}>
+                  ({groupRoutes.length})
+                </span>
+              </div>
+              {groupRemaining > 0 && (
+                <span style={{ 
+                  background: '#FF6B6B', 
+                  color: 'white', 
+                  padding: '2px 8px', 
+                  borderRadius: '10px', 
+                  fontSize: '12px',
+                  fontWeight: 'bold'
+                }}>
+                  {groupRemaining}
+                </span>
+              )}
+            </div>
+
+            {/* グループ内のルート */}
+            {!isCollapsed && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', paddingLeft: '12px', borderLeft: '2px solid var(--accent-100)' }}>
+                {groupRoutes.map(r => renderRouteItem(r))}
+              </div>
+            )}
+          </div>
+        );
+
+        processedGroups.add(rr.groupName);
+      } else if (!rr.groupName) {
+        // グループなしのルート
+        elements.push(renderRouteItem(rr));
+      }
+    });
+
+    return elements;
+  }
+
+  // 個別のルートアイテムを表示
+  function renderRouteItem(routeRun: RouteRun) {
+    return (
+      <div
+        key={routeRun.routeId}
+        className="route-item"
+        onClick={() => toggleRemaining(routeRun.routeId)}
+        style={{
+          padding: '12px 14px',
+          border: '1px solid',
+          borderColor: routeRun.hasRemaining ? 'var(--primary-100)' : 'var(--bg-200)',
+          borderRadius: '10px',
+          backgroundColor: routeRun.hasRemaining ? 'var(--bg-100)' : 'var(--bg-300)',
+          cursor: 'pointer',
+          transition: 'all 0.2s',
+          userSelect: 'none'
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{ 
+            width: '24px', 
+            height: '24px', 
+            borderRadius: '50%', 
+            background: routeRun.hasRemaining ? '#FF6B6B' : '#4CAF50',
+            display: 'flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            color: 'white',
+            fontSize: '12px',
+            fontWeight: 'bold',
+            flexShrink: 0
+          }}>
+            {routeRun.hasRemaining ? '✕' : '✓'}
+          </div>
+          <span style={{
+            fontSize: '14px',
+            fontWeight: routeRun.hasRemaining ? '600' : '400',
+            color: routeRun.hasRemaining ? 'var(--primary-100)' : 'var(--text-100)'
+          }}>
+            {routeRun.routeName}
+          </span>
+        </div>
+
+        {routeRun.hasRemaining && (
+          <div 
+            onClick={(e) => e.stopPropagation()}
+            style={{ 
+              marginTop: '12px', 
+              paddingTop: '12px', 
+              borderTop: '1px solid var(--bg-200)', 
+              cursor: 'default'
+            }}
+          >
+            <div style={{ display: 'flex', gap: '10px', marginBottom: '10px', flexWrap: 'wrap' }}>
+              <div style={{ flex: '0 0 70px' }}>
+                <label style={{ fontSize: '11px', marginBottom: '4px', color: 'var(--text-100)', fontWeight: 'bold', display: 'block' }}>残数</label>
+                <input
+                  type="number"
+                  min="0"
+                  value={routeRun.remainingCount}
+                  onChange={(e) => updateRemainingCount(routeRun.routeId, parseInt(e.target.value) || 0)}
+                  style={{ 
+                    padding: '8px', 
+                    textAlign: 'center', 
+                    fontWeight: 'bold', 
+                    fontSize: '14px',
+                    background: 'var(--bg-200)',
+                    color: 'var(--text-100)',
+                    border: '1px solid var(--primary-100)',
+                    borderRadius: '6px'
+                  }}
+                />
+              </div>
+              <div style={{ flex: 1, minWidth: '120px' }}>
+                <label style={{ fontSize: '11px', marginBottom: '4px', color: 'var(--text-100)', fontWeight: 'bold', display: 'block' }}>メモ</label>
+                <input
+                  type="text"
+                  value={routeRun.comment}
+                  onChange={(e) => updateComment(routeRun.routeId, e.target.value)}
+                  placeholder="理由..."
+                  style={{ 
+                    padding: '8px',
+                    background: 'var(--bg-200)',
+                    color: 'var(--text-100)',
+                    border: '1px solid var(--accent-100)',
+                    borderRadius: '6px',
+                    fontSize: '13px'
+                  }}
+                />
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
+              {TAGS.map(tag => (
+                <button
+                  key={tag}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    addTagToComment(routeRun.routeId, tag);
+                  }}
+                  style={{
+                    background: 'var(--bg-200)',
+                    color: 'var(--text-100)',
+                    padding: '4px 8px',
+                    fontSize: '11px',
+                    borderRadius: '4px',
+                    border: '1px solid var(--accent-100)',
+                    minHeight: '26px'
+                  }}
+                >
+                  {tag}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
 };
