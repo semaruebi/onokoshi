@@ -90,7 +90,27 @@ npm run build
 
 レスポンシブデザインに対応しており、どのデバイスでも快適に使用できます。
 
+## 🌐 GitHub Pagesでの公開
+
+このアプリはGitHub Pagesで公開されています。
+
+**公開URL**: https://semaruebi.github.io/hunt-checker/
+
+### デプロイ方法
+
+1. GitHubリポジトリの設定で、Settings > Pages を開く
+2. Source を "GitHub Actions" に設定
+3. `master` ブランチにpushすると自動的にデプロイされます
+
+または、手動でデプロイする場合：
+
+```bash
+npm run build
+# distフォルダの内容をgh-pagesブランチにpush
+```
+
 ## 📄 ライセンス
 
 MIT License
+
 
