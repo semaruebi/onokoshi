@@ -1,63 +1,49 @@
 import { useState } from 'react';
-import { Route } from '../types';
 import { parseRouteText } from '../utils/routeParser';
-import { addRoute, generateId } from '../utils/storage';
+import { saveRoute } from '../utils/indexedDB';
 
 interface RouteFormProps {
   onRouteAdded: () => void;
 }
 
 export const RouteForm = ({ onRouteAdded }: RouteFormProps) => {
-  const [routeName, setRouteName] = useState('');
   const [routeText, setRouteText] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!routeName.trim() || !routeText.trim()) {
-      alert('ルート名とルートリストを入力してください');
+    if (!routeText.trim()) {
+      alert('ルートリストを入力してください');
       return;
     }
 
-    const groups = parseRouteText(routeText);
-    if (groups.length === 0) {
-      alert('有効な精鋭グループを入力してください');
+    const routes = parseRouteText(routeText);
+    if (routes.length === 0) {
+      alert('有効なルートを入力してください');
       return;
     }
 
-    const newRoute: Route = {
-      id: generateId(),
-      name: routeName.trim(),
-      groups,
-      createdAt: new Date().toISOString()
-    };
-
-    addRoute(newRoute);
-    setRouteName('');
-    setRouteText('');
-    onRouteAdded();
-    alert('ルートを登録しました！');
+    try {
+      // 各ルートを保存
+      for (const route of routes) {
+        await saveRoute(route);
+      }
+      setRouteText('');
+      onRouteAdded();
+      alert('ルートを登録しました！');
+    } catch (error) {
+      console.error('ルートの保存に失敗しました:', error);
+      alert('ルートの保存に失敗しました');
+    }
   };
 
   return (
     <div className="card">
-      <h2 style={{ marginBottom: '16px', color: '#333' }}>🗺️ 新しいルートを登録</h2>
+      <h2 style={{ marginBottom: '16px', color: '#333' }}>🗺️ ルート情報を登録</h2>
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: '16px' }}>
           <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: '#555' }}>
-            ルート名
-          </label>
-          <input
-            type="text"
-            value={routeName}
-            onChange={(e) => setRouteName(e.target.value)}
-            placeholder="例: 今日のRTAルート"
-            style={{ width: '100%' }}
-          />
-        </div>
-        <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: '#555' }}>
-            精鋭グループリスト（一行ずつ入力）
+            ルートリスト（一行ずつ入力）
           </label>
           <textarea
             value={routeText}
@@ -66,7 +52,7 @@ export const RouteForm = ({ onRouteAdded }: RouteFormProps) => {
             style={{ width: '100%', minHeight: '150px' }}
           />
           <div style={{ marginTop: '8px', fontSize: '14px', color: '#666' }}>
-            形式: 精鋭グループ名 数（例: かつヴァナ 5）
+            形式: ルート名 精鋭数（例: かつヴァナ 5）
           </div>
         </div>
         <button
@@ -83,5 +69,3 @@ export const RouteForm = ({ onRouteAdded }: RouteFormProps) => {
     </div>
   );
 };
-
-

@@ -1,46 +1,84 @@
 import { useState, useEffect } from 'react';
-import { Route, CheckHistory } from './types';
-import { loadRoutes, loadHistories } from './utils/storage';
+import { Run } from './types';
+import { getAllRuns, generateId, getAllRoutes, saveRun } from './utils/indexedDB';
 import { RouteForm } from './components/RouteForm';
-import { RouteList } from './components/RouteList';
-import { CheckInterface } from './components/CheckInterface';
-import { HistoryView } from './components/HistoryView';
+import { RunList } from './components/RunList';
+import { RunEditor } from './components/RunEditor';
 import { Statistics } from './components/Statistics';
 
-type ViewMode = 'home' | 'check' | 'history' | 'statistics';
+type ViewMode = 'home' | 'edit' | 'statistics';
 
 function App() {
-  const [routes, setRoutes] = useState<Route[]>([]);
-  const [histories, setHistories] = useState<CheckHistory[]>([]);
-  const [selectedRoute, setSelectedRoute] = useState<Route | null>(null);
+  const [runs, setRuns] = useState<Run[]>([]);
+  const [selectedRun, setSelectedRun] = useState<Run | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('home');
 
   useEffect(() => {
-    setRoutes(loadRoutes());
-    setHistories(loadHistories());
+    loadRuns();
   }, []);
 
-  const refreshRoutes = () => {
-    setRoutes(loadRoutes());
+  const loadRuns = async () => {
+    try {
+      const loadedRuns = await getAllRuns();
+      setRuns(loadedRuns);
+    } catch (error) {
+      console.error('RUNの読み込みに失敗しました:', error);
+    }
   };
 
-  const refreshHistories = () => {
-    setHistories(loadHistories());
+  const handleCreateNewRun = async () => {
+    try {
+      const routes = await getAllRoutes();
+      if (routes.length === 0) {
+        alert('まずルート情報を登録してください');
+        return;
+      }
+
+      const now = new Date();
+      const dateStr = now.toISOString().split('T')[0].replace(/-/g, '-');
+      const runName = `${dateStr} RUN`;
+
+      const newRun: Run = {
+        id: generateId(),
+        name: runName,
+        createdAt: now.toISOString(),
+        updatedAt: now.toISOString(),
+        routes: routes.map(route => ({
+          routeId: route.id,
+          routeName: route.name,
+          hasRemaining: false,
+          remainingCount: 0,
+          comment: ''
+        })),
+        expectedEliteCount: 0,
+        tsurumiShortage: 0,
+        adlibAddition: 0
+      };
+
+      // 新規作成時にRUNを保存
+      await saveRun(newRun);
+      await loadRuns();
+      setSelectedRun(newRun);
+      setViewMode('edit');
+    } catch (error) {
+      console.error('RUNの作成に失敗しました:', error);
+      alert('RUNの作成に失敗しました');
+    }
   };
 
-  const handleRouteSelect = (route: Route) => {
-    setSelectedRoute(route);
-    setViewMode('check');
+  const handleRunSelect = (run: Run) => {
+    setSelectedRun(run);
+    setViewMode('edit');
   };
 
-  const handleCheckComplete = () => {
-    setSelectedRoute(null);
+  const handleRunSave = async () => {
+    await loadRuns();
+    setSelectedRun(null);
     setViewMode('home');
-    refreshHistories();
   };
 
-  const handleCheckCancel = () => {
-    setSelectedRoute(null);
+  const handleRunCancel = () => {
+    setSelectedRun(null);
     setViewMode('home');
   };
 
@@ -53,15 +91,15 @@ function App() {
         color: 'white'
       }}>
         <h1 style={{ fontSize: '32px', marginBottom: '8px', fontWeight: 'bold' }}>
-          🎯 狩り残し確認チェッカー
+          お残しは許しまへんday
         </h1>
         <p style={{ fontSize: '16px', opacity: 0.9 }}>
-          精鋭狩りRTAの狩り残しを効率的にチェック・記録
+          狩り残し確認・記録ツール
         </p>
       </div>
 
       {/* ナビゲーション */}
-      {viewMode !== 'check' && (
+      {viewMode !== 'edit' && (
         <div style={{ 
           display: 'flex', 
           gap: '12px', 
@@ -79,15 +117,6 @@ function App() {
             🏠 ホーム
           </button>
           <button
-            onClick={() => setViewMode('history')}
-            style={{
-              backgroundColor: viewMode === 'history' ? '#667eea' : '#999',
-              color: 'white'
-            }}
-          >
-            📈 履歴
-          </button>
-          <button
             onClick={() => setViewMode('statistics')}
             style={{
               backgroundColor: viewMode === 'statistics' ? '#667eea' : '#999',
@@ -102,34 +131,43 @@ function App() {
       {/* コンテンツ */}
       {viewMode === 'home' && (
         <>
-          <RouteForm onRouteAdded={refreshRoutes} />
-          <RouteList
-            routes={routes}
-            onRouteSelect={handleRouteSelect}
-            onRouteDeleted={refreshRoutes}
+          <div className="card" style={{ marginBottom: '20px' }}>
+            <button
+              onClick={handleCreateNewRun}
+              style={{
+                backgroundColor: '#667eea',
+                color: 'white',
+                width: '100%',
+                padding: '16px',
+                fontSize: '18px',
+                fontWeight: 'bold'
+              }}
+            >
+              ➕ 新規作成
+            </button>
+          </div>
+          <RouteForm onRouteAdded={loadRuns} />
+          <RunList
+            runs={runs}
+            onRunSelect={handleRunSelect}
+            onRunDeleted={loadRuns}
           />
         </>
       )}
 
-      {viewMode === 'check' && selectedRoute && (
-        <CheckInterface
-          route={selectedRoute}
-          onComplete={handleCheckComplete}
-          onCancel={handleCheckCancel}
+      {viewMode === 'edit' && selectedRun && (
+        <RunEditor
+          run={selectedRun}
+          onSave={handleRunSave}
+          onCancel={handleRunCancel}
         />
       )}
 
-      {viewMode === 'history' && (
-        <HistoryView histories={histories} />
-      )}
-
       {viewMode === 'statistics' && (
-        <Statistics histories={histories} />
+        <Statistics runs={runs} />
       )}
     </div>
   );
 }
 
 export default App;
-
-
