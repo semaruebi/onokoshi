@@ -18,7 +18,7 @@ export const Statistics = ({ runs }: StatisticsProps) => {
   if (runs.length === 0) {
     return (
       <div className="card">
-        <p style={{ color: '#666', textAlign: 'center' }}>
+        <p style={{ color: 'var(--text-200)', textAlign: 'center' }}>
           統計情報を表示するには、RUNデータが必要です。
         </p>
       </div>
@@ -107,33 +107,34 @@ export const Statistics = ({ runs }: StatisticsProps) => {
 
   const renderTop3 = (title: string, items: RouteStats[], renderItem: (item: RouteStats, index: number) => React.ReactNode) => (
     <div className="card" style={{ marginBottom: '20px' }}>
-      <h3 style={{ marginBottom: '16px', color: '#333', fontSize: '20px' }}>{title}</h3>
+      <h3 style={{ marginBottom: '16px', color: 'var(--text-100)', fontSize: '20px', fontWeight: 'bold' }}>{title}</h3>
       {items.length === 0 ? (
-        <p style={{ color: '#666', fontSize: '14px' }}>データがありません</p>
+        <p style={{ color: 'var(--text-200)', fontSize: '14px' }}>データがありません</p>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {items.map((item, index) => (
             <div
               key={item.routeId}
               style={{
-                padding: '12px',
-                backgroundColor: '#f9f9f9',
-                borderRadius: '8px',
-                border: '2px solid #e0e0e0'
+                padding: '16px',
+                backgroundColor: 'var(--bg-200)',
+                borderRadius: '12px',
+                border: '1px solid var(--accent-100)'
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <div style={{
-                  width: '32px',
-                  height: '32px',
+                  width: '36px',
+                  height: '36px',
                   borderRadius: '50%',
                   backgroundColor: index === 0 ? '#ffd700' : index === 1 ? '#c0c0c0' : '#cd7f32',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: 'white',
+                  color: '#333',
                   fontWeight: 'bold',
-                  fontSize: '14px'
+                  fontSize: '16px',
+                  flexShrink: 0
                 }}>
                   {index + 1}
                 </div>
@@ -151,10 +152,10 @@ export const Statistics = ({ runs }: StatisticsProps) => {
       {/* 直近で狩り残したルート */}
       {renderTop3('直近で狩り残したルート', recentRemaining, (item) => (
         <div style={{ flex: 1 }}>
-          <div style={{ fontWeight: 'bold', fontSize: '16px', marginBottom: '4px' }}>
+          <div style={{ fontWeight: 'bold', fontSize: '16px', marginBottom: '4px', color: 'var(--text-100)' }}>
             {item.routeName}
           </div>
-          <div style={{ fontSize: '14px', color: '#666' }}>
+          <div style={{ fontSize: '14px', color: 'var(--text-200)' }}>
             最終: {item.lastRemainingDate ? new Date(item.lastRemainingDate).toLocaleDateString('ja-JP') : '-'}
           </div>
         </div>
@@ -165,10 +166,10 @@ export const Statistics = ({ runs }: StatisticsProps) => {
         const rate = ((item.remainingRuns / item.totalRuns) * 100).toFixed(1);
         return (
           <div style={{ flex: 1 }}>
-            <div style={{ fontWeight: 'bold', fontSize: '16px', marginBottom: '4px' }}>
+            <div style={{ fontWeight: 'bold', fontSize: '16px', marginBottom: '4px', color: 'var(--text-100)' }}>
               {item.routeName}
             </div>
-            <div style={{ fontSize: '14px', color: '#666' }}>
+            <div style={{ fontSize: '14px', color: 'var(--text-200)' }}>
               {item.remainingRuns}回 / {item.totalRuns}回 ({rate}%)
             </div>
           </div>
@@ -178,10 +179,10 @@ export const Statistics = ({ runs }: StatisticsProps) => {
       {/* 狩り残しが多かったルート */}
       {renderTop3('狩り残しが多かったルート', highRemainingCount, (item) => (
         <div style={{ flex: 1 }}>
-          <div style={{ fontWeight: 'bold', fontSize: '16px', marginBottom: '4px' }}>
+          <div style={{ fontWeight: 'bold', fontSize: '16px', marginBottom: '4px', color: 'var(--text-100)' }}>
             {item.routeName}
           </div>
-          <div style={{ fontSize: '14px', color: '#666' }}>
+          <div style={{ fontSize: '14px', color: 'var(--text-200)' }}>
             合計 {item.totalRemainingCount}体
           </div>
         </div>
@@ -192,10 +193,10 @@ export const Statistics = ({ runs }: StatisticsProps) => {
         const rate = ((item.remainingRuns / item.totalRuns) * 100).toFixed(1);
         return (
           <div style={{ flex: 1 }}>
-            <div style={{ fontWeight: 'bold', fontSize: '16px', marginBottom: '4px' }}>
+            <div style={{ fontWeight: 'bold', fontSize: '16px', marginBottom: '4px', color: 'var(--text-100)' }}>
               {item.routeName}
             </div>
-            <div style={{ fontSize: '14px', color: '#666' }}>
+            <div style={{ fontSize: '14px', color: 'var(--text-200)' }}>
               {item.remainingRuns}回 / {item.totalRuns}回 ({rate}%)
             </div>
           </div>
@@ -204,43 +205,44 @@ export const Statistics = ({ runs }: StatisticsProps) => {
 
       {/* タグの頻出TOP3 */}
       <div className="card">
-        <h3 style={{ marginBottom: '16px', color: '#333', fontSize: '20px' }}>
+        <h3 style={{ marginBottom: '16px', color: 'var(--text-100)', fontSize: '20px', fontWeight: 'bold' }}>
           タグの頻出TOP3（狩り残しの理由）
         </h3>
         {topTags.length === 0 ? (
-          <p style={{ color: '#666', fontSize: '14px' }}>データがありません</p>
+          <p style={{ color: 'var(--text-200)', fontSize: '14px' }}>データがありません</p>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             {topTags.map((tagStat, index) => (
               <div
                 key={tagStat.tag}
                 style={{
-                  padding: '12px',
-                  backgroundColor: '#f9f9f9',
-                  borderRadius: '8px',
-                  border: '2px solid #e0e0e0'
+                  padding: '16px',
+                  backgroundColor: 'var(--bg-200)',
+                  borderRadius: '12px',
+                  border: '1px solid var(--accent-100)'
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <div style={{
-                    width: '32px',
-                    height: '32px',
+                    width: '36px',
+                    height: '36px',
                     borderRadius: '50%',
                     backgroundColor: index === 0 ? '#ffd700' : index === 1 ? '#c0c0c0' : '#cd7f32',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    color: 'white',
+                    color: '#333',
                     fontWeight: 'bold',
-                    fontSize: '14px'
+                    fontSize: '16px',
+                    flexShrink: 0
                   }}>
                     {index + 1}
                   </div>
                   <div style={{ flex: 1 }}>
-                    <div style={{ fontWeight: 'bold', fontSize: '16px', marginBottom: '4px' }}>
+                    <div style={{ fontWeight: 'bold', fontSize: '16px', marginBottom: '4px', color: 'var(--text-100)' }}>
                       {tagStat.tag}
                     </div>
-                    <div style={{ fontSize: '14px', color: '#666' }}>
+                    <div style={{ fontSize: '14px', color: 'var(--text-200)' }}>
                       {tagStat.count}回使用
                     </div>
                   </div>

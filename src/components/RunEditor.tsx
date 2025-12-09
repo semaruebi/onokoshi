@@ -108,101 +108,91 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
 
   return (
     <div className={isCompleted ? 'animate-pop-in' : 'animate-slide-in'}>
-      {/* ヘッダー */}
-      <div className="card" style={{ marginBottom: '24px', position: 'sticky', top: '20px', zIndex: 100, border: '1px solid var(--primary-100)', boxShadow: '0 8px 32px rgba(139, 95, 191, 0.15)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-          <input
-            type="text"
-            value={runName}
-            onChange={(e) => setRunName(e.target.value)}
-            style={{
-              fontSize: '22px',
-              fontWeight: 'bold',
-              border: 'none',
-              background: 'transparent',
-              borderBottom: '2px solid transparent',
-              borderRadius: '8px',
-              padding: '8px 12px',
-              width: '100%',
-              maxWidth: '500px',
-              boxShadow: 'none',
-              color: 'var(--text-100)',
-              marginLeft: '-12px'
-            }}
-            onFocus={(e) => {
-              e.target.style.borderBottom = '2px solid var(--primary-100)';
-              e.target.style.backgroundColor = 'var(--bg-100)';
-            }}
-            onBlur={(e) => {
-              e.target.style.borderBottom = '2px solid transparent';
-              e.target.style.backgroundColor = 'transparent';
-            }}
-          />
-          <div style={{ display: 'flex', gap: '12px' }}>
-            <button
-              onClick={onCancel}
-              className="secondary-button"
-              style={{ minHeight: '44px', padding: '0 20px' }}
-            >
-              キャンセル
-            </button>
-            <button
-              onClick={handleSave}
-              className="primary-button"
-              style={{ minHeight: '44px', padding: '0 24px' }}
-            >
-              保存する
-            </button>
-          </div>
-        </div>
+      {/* ボタンバー - 常に上部に固定 */}
+      <div style={{ 
+        display: 'flex', 
+        gap: '8px', 
+        marginBottom: '16px',
+        justifyContent: 'flex-end',
+        flexWrap: 'nowrap'
+      }}>
+        <button
+          onClick={onCancel}
+          className="secondary-button"
+          style={{ minHeight: '40px', padding: '0 16px', fontSize: '14px', whiteSpace: 'nowrap' }}
+        >
+          キャンセル
+        </button>
+        <button
+          onClick={handleSave}
+          className="primary-button"
+          style={{ minHeight: '40px', padding: '0 20px', fontSize: '14px', whiteSpace: 'nowrap' }}
+        >
+          保存
+        </button>
+      </div>
 
-        {/* 最終結果 - ピーク・エンドの法則: 最も重要な情報を強調 */}
+      {/* メインカード */}
+      <div className="card" style={{ marginBottom: '16px', border: '1px solid var(--primary-100)', boxShadow: '0 4px 16px rgba(139, 95, 191, 0.1)', padding: '16px' }}>
+        {/* RUN名 */}
+        <input
+          type="text"
+          value={runName}
+          onChange={(e) => setRunName(e.target.value)}
+          style={{
+            fontSize: '18px',
+            fontWeight: 'bold',
+            border: 'none',
+            background: 'var(--bg-100)',
+            borderRadius: '8px',
+            padding: '10px 12px',
+            width: '100%',
+            boxShadow: 'none',
+            color: 'var(--text-100)',
+            marginBottom: '16px'
+          }}
+        />
+
+        {/* 最終結果 - コンパクト版 */}
         <div style={{
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          padding: '24px',
+          padding: '16px',
           background: `linear-gradient(135deg, var(--bg-200) 0%, var(--bg-100) 100%)`,
-          borderRadius: '20px',
-          border: 'none',
-          boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.03)',
-          marginBottom: '24px'
+          borderRadius: '12px',
+          marginBottom: '16px'
         }}>
           <div style={{ textAlign: 'center' }}>
-            <div style={{ fontSize: '13px', color: 'var(--text-200)', marginBottom: '8px', fontWeight: 700, letterSpacing: '0.05em' }}>
+            <div style={{ fontSize: '11px', color: 'var(--text-200)', marginBottom: '4px', fontWeight: 700, letterSpacing: '0.05em' }}>
               FINAL COUNT
             </div>
             <div style={{ 
-              fontSize: '64px', 
+              fontSize: '48px', 
               fontWeight: '800', 
               background: 'linear-gradient(135deg, var(--primary-100) 0%, var(--accent-200) 100%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               lineHeight: '1',
-              marginBottom: '8px',
-              fontFamily: 'Segoe UI, Roboto, sans-serif'
+              marginBottom: '4px'
             }}>
               {finalCount}
             </div>
             <div style={{ 
-              fontSize: '12px', 
+              fontSize: '10px', 
               color: 'var(--text-300)', 
-              fontFamily: 'monospace', 
-              background: 'var(--bg-300)',
-              padding: '4px 12px',
-              borderRadius: '12px',
-              display: 'inline-block'
+              fontFamily: 'monospace'
             }}>
-              {expectedEliteCount} (想定) - {totalRemaining} (残) - {tsurumiShortage} (不足) + {adlibAddition} (追加)
+              {expectedEliteCount} - {totalRemaining} - {tsurumiShortage} + {adlibAddition}
             </div>
           </div>
         </div>
 
-        {/* 入力フィールド - グリッドレイアウトで整理 */}
+        {/* 入力フィールド - 2x2グリッド */}
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
-          gap: '16px',
+          gridTemplateColumns: 'repeat(2, 1fr)',
+          gap: '12px',
         }}>
           <div>
             <label style={{ fontSize: '13px' }}>想定精鋭数</label>
@@ -326,45 +316,47 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
                     marginRight: '-8px'
                   }}
                 >
-                  <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
-                    <div style={{ flex: '0 0 100px' }}>
-                      <label style={{ fontSize: '12px', marginBottom: '6px', color: 'var(--text-100)', fontWeight: 'bold' }}>狩り残し数</label>
+                  <div style={{ display: 'flex', gap: '12px', marginBottom: '16px', flexWrap: 'wrap' }}>
+                    <div style={{ flex: '0 0 80px' }}>
+                      <label style={{ fontSize: '12px', marginBottom: '6px', color: 'var(--text-100)', fontWeight: 'bold', display: 'block' }}>狩り残し数</label>
                       <input
                         type="number"
                         min="0"
                         value={routeRun.remainingCount}
                         onChange={(e) => updateRemainingCount(routeRun.routeId, parseInt(e.target.value) || 0)}
                         style={{ 
-                          padding: '12px', 
+                          padding: '10px', 
                           textAlign: 'center', 
                           fontWeight: 'bold', 
-                          fontSize: '18px',
-                          background: 'white',
+                          fontSize: '16px',
+                          background: 'var(--bg-200)',
+                          color: 'var(--text-100)',
                           border: '2px solid var(--primary-100)',
-                          boxShadow: '0 2px 8px rgba(139, 95, 191, 0.15)'
+                          borderRadius: '8px'
                         }}
                       />
                     </div>
-                    <div style={{ flex: 1 }}>
-                      <label style={{ fontSize: '12px', marginBottom: '6px', color: 'var(--text-100)', fontWeight: 'bold' }}>メモ・理由</label>
+                    <div style={{ flex: 1, minWidth: '150px' }}>
+                      <label style={{ fontSize: '12px', marginBottom: '6px', color: 'var(--text-100)', fontWeight: 'bold', display: 'block' }}>メモ・理由</label>
                       <input
                         type="text"
                         value={routeRun.comment}
                         onChange={(e) => updateComment(routeRun.routeId, e.target.value)}
                         placeholder="理由を入力..."
                         style={{ 
-                          padding: '12px',
-                          background: 'white',
+                          padding: '10px',
+                          background: 'var(--bg-200)',
+                          color: 'var(--text-100)',
                           border: '2px solid var(--accent-100)',
-                          boxShadow: '0 2px 8px rgba(0,0,0,0.05)'
+                          borderRadius: '8px'
                         }}
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label style={{ fontSize: '12px', marginBottom: '8px', color: 'var(--text-100)', fontWeight: 'bold' }}>クイックタグ</label>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                    <label style={{ fontSize: '12px', marginBottom: '8px', color: 'var(--text-100)', fontWeight: 'bold', display: 'block' }}>クイックタグ</label>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                       {TAGS.map(tag => (
                         <button
                           key={tag}
@@ -373,27 +365,24 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
                             addTagToComment(routeRun.routeId, tag);
                           }}
                           style={{
-                            background: 'white',
-                            color: 'var(--primary-200)',
-                            padding: '8px 14px',
-                            fontSize: '13px',
-                            borderRadius: '8px',
-                            border: '2px solid var(--accent-100)',
-                            minHeight: '36px',
-                            fontWeight: '600',
-                            boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+                            background: 'var(--bg-200)',
+                            color: 'var(--text-100)',
+                            padding: '6px 12px',
+                            fontSize: '12px',
+                            borderRadius: '6px',
+                            border: '1px solid var(--accent-100)',
+                            minHeight: '32px',
+                            fontWeight: '600'
                           }}
                           onMouseEnter={(e) => {
                             e.currentTarget.style.background = 'var(--primary-100)';
-                            e.currentTarget.style.color = 'white';
+                            e.currentTarget.style.color = 'var(--primary-300)';
                             e.currentTarget.style.borderColor = 'var(--primary-100)';
-                            e.currentTarget.style.transform = 'translateY(-1px)';
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'white';
-                            e.currentTarget.style.color = 'var(--primary-200)';
+                            e.currentTarget.style.background = 'var(--bg-200)';
+                            e.currentTarget.style.color = 'var(--text-100)';
                             e.currentTarget.style.borderColor = 'var(--accent-100)';
-                            e.currentTarget.style.transform = 'translateY(0)';
                           }}
                         >
                           {tag}

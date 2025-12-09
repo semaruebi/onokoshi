@@ -90,13 +90,14 @@ export const RunList = ({ runs, onRunSelect, onRunDeleted }: RunListProps) => {
                   </div>
                 </div>
                 
-                <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', color: 'var(--text-200)' }}>
                     <span style={{ 
                       width: '8px', 
                       height: '8px', 
                       borderRadius: '50%', 
-                      background: remainingCount > 0 ? '#FF6B6B' : '#4CAF50' 
+                      background: remainingCount > 0 ? '#FF6B6B' : '#4CAF50',
+                      flexShrink: 0
                     }} />
                     {remainingCount > 0 ? (
                       <span>狩り残し <strong style={{ color: '#FF6B6B' }}>{remainingCount}</strong> 体</span>
@@ -106,8 +107,9 @@ export const RunList = ({ runs, onRunSelect, onRunDeleted }: RunListProps) => {
                   </div>
                   
                   {totalRemaining > 0 && (
-                    <div style={{ fontSize: '12px', color: 'var(--text-300)', background: 'var(--bg-100)', padding: '2px 8px', borderRadius: '4px' }}>
-                      {totalRemaining} ルート未完了
+                    <div style={{ fontSize: '12px', color: 'var(--text-200)', marginLeft: '14px' }}>
+                      {run.routes.filter(r => r.hasRemaining).slice(0, 3).map(r => r.routeName).join('、')}
+                      {totalRemaining > 3 && ` 他${totalRemaining - 3}件`}
                     </div>
                   )}
                 </div>

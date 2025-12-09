@@ -111,65 +111,69 @@ function App() {
   };
 
   return (
-    <div>
-      {/* テーマ切り替えボタン */}
-      <button
-        onClick={toggleTheme}
-        style={{
-          position: 'fixed',
-          top: '16px',
-          right: '16px',
-          zIndex: 1000,
-          background: 'var(--bg-300)',
-          border: '2px solid var(--accent-100)',
-          borderRadius: '12px',
-          padding: '10px 16px',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '8px',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
-          color: 'var(--text-100)',
-          fontSize: '14px',
-          fontWeight: '600',
-          minHeight: '44px'
-        }}
-      >
-        {theme === 'light' ? '🌙' : '☀️'}
-        <span>{theme === 'light' ? '常夜' : '白夜'}</span>
-      </button>
-
+    <div style={{ paddingTop: '8px' }}>
       {/* ヘッダー */}
-      <div 
-        onClick={() => {
-          setViewMode('home');
-          setSelectedRun(null);
-        }}
-        style={{ 
-          textAlign: 'center', 
-          marginBottom: '32px',
-          cursor: 'pointer',
-          transition: 'all 0.2s',
-          padding: '20px',
-          borderRadius: '16px',
-          background: `linear-gradient(135deg, var(--primary-100) 0%, var(--accent-200) 100%)`,
-          boxShadow: '0 4px 16px rgba(139, 95, 191, 0.3)'
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'translateY(-2px)';
-          e.currentTarget.style.boxShadow = '0 6px 20px rgba(139, 95, 191, 0.4)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'translateY(0)';
-          e.currentTarget.style.boxShadow = '0 4px 16px rgba(139, 95, 191, 0.3)';
-        }}
-      >
-        <h1 style={{ fontSize: '32px', marginBottom: '8px', fontWeight: 'bold', color: 'var(--primary-300)' }}>
-          お残しは許しまへんday
-        </h1>
-        <p style={{ fontSize: '16px', color: 'var(--primary-300)', opacity: 0.95 }}>
-          狩り残し確認・記録ツール
-        </p>
+      <div style={{ position: 'relative', marginBottom: '24px' }}>
+        <div 
+          onClick={() => {
+            setViewMode('home');
+            setSelectedRun(null);
+          }}
+          style={{ 
+            textAlign: 'center', 
+            cursor: 'pointer',
+            transition: 'all 0.2s',
+            padding: '16px 20px',
+            borderRadius: '16px',
+            background: `linear-gradient(135deg, var(--primary-100) 0%, var(--accent-200) 100%)`,
+            boxShadow: '0 4px 16px rgba(139, 95, 191, 0.3)'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 6px 20px rgba(139, 95, 191, 0.4)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 4px 16px rgba(139, 95, 191, 0.3)';
+          }}
+        >
+          <h1 style={{ fontSize: '24px', marginBottom: '4px', fontWeight: 'bold', color: 'var(--primary-300)' }}>
+            お残しは許しまへんday
+          </h1>
+          <p style={{ fontSize: '13px', color: 'var(--primary-300)', opacity: 0.9 }}>
+            狩り残し確認・記録ツール
+          </p>
+        </div>
+        
+        {/* テーマ切り替えボタン - ヘッダーの下に配置 */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            toggleTheme();
+          }}
+          style={{
+            position: 'absolute',
+            bottom: '-20px',
+            right: '16px',
+            zIndex: 10,
+            background: 'var(--bg-300)',
+            border: '2px solid var(--accent-100)',
+            borderRadius: '20px',
+            padding: '6px 14px',
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            color: 'var(--text-100)',
+            fontSize: '12px',
+            fontWeight: '600',
+            minHeight: '36px'
+          }}
+        >
+          {theme === 'light' ? '🌙' : '☀️'}
+          <span>{theme === 'light' ? '常夜' : '白夜'}</span>
+        </button>
       </div>
 
       {/* ナビゲーション */}

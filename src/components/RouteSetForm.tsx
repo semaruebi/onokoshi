@@ -57,12 +57,12 @@ export const RouteSetForm = ({ onRouteSetAdded }: RouteSetFormProps) => {
 
   return (
     <div className="card">
-      <h2 style={{ marginBottom: '16px', color: '#333', fontSize: '18px', fontWeight: 'bold' }}>
+      <h2 style={{ marginBottom: '16px', color: 'var(--text-100)', fontSize: '18px', fontWeight: 'bold' }}>
         🗺️ ルートセットを登録
       </h2>
       <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: '#555' }}>
+          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: 'var(--text-100)' }}>
             ルートセット名
           </label>
           <input
@@ -70,11 +70,11 @@ export const RouteSetForm = ({ onRouteSetAdded }: RouteSetFormProps) => {
             value={routeSetName}
             onChange={(e) => setRouteSetName(e.target.value)}
             placeholder="例: 400EE NPuI No LeyLine / ぼくのかんがえたさいきょうのるーと"
-            style={{ width: '100%', padding: '10px', fontSize: '14px' }}
+            style={{ width: '100%', padding: '12px', fontSize: '14px' }}
           />
         </div>
         <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: '#555' }}>
+          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: 'var(--text-100)' }}>
             想定精鋭数
           </label>
           <input
@@ -82,20 +82,20 @@ export const RouteSetForm = ({ onRouteSetAdded }: RouteSetFormProps) => {
             value={expectedEliteCount || ''}
             onChange={(e) => setExpectedEliteCount(parseInt(e.target.value) || 0)}
             placeholder="例: 100"
-            style={{ width: '100%', padding: '10px', fontSize: '14px' }}
+            style={{ width: '100%', padding: '12px', fontSize: '14px' }}
           />
         </div>
         <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: '#555' }}>
+          <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: 'var(--text-100)' }}>
             ルートリスト（一行ずつ入力）
           </label>
           <textarea
             value={routeText}
             onChange={(e) => setRouteText(e.target.value)}
             placeholder="かつヴァナ 5&#10;聖遺殿 8&#10;...&#10;（livesplitのsegmentをそのまま貼り付けでOK)"
-            style={{ width: '100%', minHeight: '120px', padding: '10px', fontSize: '14px' }}
+            style={{ width: '100%', minHeight: '120px', padding: '12px', fontSize: '14px' }}
           />
-          <div style={{ marginTop: '8px', fontSize: '13px', color: '#666' }}>
+          <div style={{ marginTop: '8px', fontSize: '13px', color: 'var(--text-200)' }}>
             形式: ルート名 精鋭数（例: かつヴァナ 5、かつヴァナ (5)、かつヴァナ）<br />
             精鋭数は省略可能です
           </div>
