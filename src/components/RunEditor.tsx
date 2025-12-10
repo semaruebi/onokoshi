@@ -4,6 +4,12 @@ import { Run, RouteRun, TAGS } from '../types';
 import { saveRun, getAllRoutes } from '../utils/indexedDB';
 import { showSuccessFeedback } from '../utils/feedback';
 
+interface TooltipState {
+  routeId: string;
+  x: number;
+  y: number;
+}
+
 interface RunEditorProps {
   run: Run;
   onSave: () => void;
@@ -18,9 +24,12 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
   const [routeRuns, setRouteRuns] = useState<RouteRun[]>(run.routes);
   const [isCompleted, setIsCompleted] = useState(false);
   const [collapsedGroups, setCollapsedGroups] = useState<Set<string>>(new Set());
+  const [tooltip, setTooltip] = useState<TooltipState | null>(null);
 
   useEffect(() => {
     loadRoutes();
+    // ページトップにスクロール
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -148,23 +157,24 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
           </button>
         </div>
         {/* RUN名 */}
-        <input
-          type="text"
-          value={runName}
-          onChange={(e) => setRunName(e.target.value)}
-          style={{
-            fontSize: '18px',
-            fontWeight: 'bold',
-            border: 'none',
-            background: 'var(--bg-100)',
-            borderRadius: '8px',
-            padding: '10px 12px',
-            width: '100%',
-            boxShadow: 'none',
-            color: 'var(--text-100)',
-            marginBottom: '16px'
-          }}
-        />
+        <div className="input-field-container" style={{ marginBottom: '16px' }}>
+          <input
+            type="text"
+            value={runName}
+            onChange={(e) => setRunName(e.target.value)}
+            className="input-interactive"
+            style={{
+              fontSize: '18px',
+              fontWeight: 'bold',
+              border: '2px solid var(--bg-200)',
+              background: 'var(--bg-100)',
+              borderRadius: '8px',
+              padding: '10px 12px',
+              width: '100%',
+              color: 'var(--text-100)',
+            }}
+          />
+        </div>
 
         {/* 最終結果 - コンパクト版 */}
         <div style={{
@@ -207,12 +217,13 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
           gridTemplateColumns: 'repeat(2, 1fr)',
           gap: '12px',
         }}>
-          <div>
+          <div className="input-field-container">
             <label style={{ fontSize: '13px' }}>想定精鋭数</label>
             <input
               type="number"
               value={expectedEliteCount}
               onChange={(e) => setExpectedEliteCount(parseInt(e.target.value) || 0)}
+              className="input-interactive"
               style={{ textAlign: 'center', fontWeight: 'bold' }}
             />
           </div>
@@ -226,34 +237,163 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
               fontWeight: 'bold',
               border: '1px solid transparent',
               textAlign: 'center',
-              fontSize: '16px'
+              fontSize: '16px',
+              transition: 'all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)'
             }}>
               {totalRemaining}
             </div>
           </div>
-          <div>
+          <div className="input-field-container">
             <label style={{ fontSize: '13px' }}>鶴観不足分</label>
             <input
               type="number"
               value={tsurumiShortage}
               onChange={(e) => setTsurumiShortage(parseInt(e.target.value) || 0)}
+              className="input-interactive"
               style={{ textAlign: 'center' }}
             />
           </div>
-          <div>
+          <div className="input-field-container">
             <label style={{ fontSize: '13px' }}>アドリブ追加数</label>
             <input
               type="number"
               value={adlibAddition}
               onChange={(e) => setAdlibAddition(parseInt(e.target.value) || 0)}
+              className="input-interactive"
               style={{ textAlign: 'center' }}
             />
           </div>
         </div>
+
+        {/* 狩り残しサマリー */}
+        {routeRuns.some(r => r.hasRemaining) && (
+          <div style={{ 
+            marginTop: '20px', 
+            padding: '12px', 
+            background: 'rgba(255, 107, 107, 0.05)', 
+            borderRadius: '12px',
+            border: '1px solid rgba(255, 107, 107, 0.2)'
+          }}>
+            <div style={{ 
+              fontSize: '12px', 
+              color: '#FF6B6B', 
+              fontWeight: 'bold', 
+              marginBottom: '8px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}>
+              <span>⚠️ 狩り残しルート</span>
+            </div>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', position: 'relative' }}>
+              {routeRuns.filter(r => r.hasRemaining).map(rr => (
+                <div 
+                  key={`summary-${rr.routeId}`}
+                  onMouseEnter={() => {
+                    if (rr.comment && rr.comment.trim()) {
+                      setTooltip({ routeId: rr.routeId, x: 0, y: 0 });
+                    }
+                  }}
+                  onMouseLeave={() => setTooltip(null)}
+                  style={{ 
+                    fontSize: '11px', 
+                    padding: '4px 8px', 
+                    background: 'var(--bg-100)', 
+                    borderRadius: '6px',
+                    border: '1px solid rgba(255, 107, 107, 0.3)',
+                    color: 'var(--text-100)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    cursor: 'default',
+                    position: 'relative'
+                  }}
+                >
+                  <span style={{ fontWeight: '600' }}>{rr.routeName}</span>
+                  {rr.remainingCount > 0 && (
+                    <span style={{ 
+                      background: '#FF6B6B', 
+                      color: 'white', 
+                      padding: '1px 5px', 
+                      borderRadius: '10px', 
+                      fontSize: '10px',
+                      fontWeight: 'bold'
+                    }}>
+                      {rr.remainingCount}
+                    </span>
+                  )}
+                  {rr.comment && rr.comment.trim() && (
+                    <span style={{ 
+                      fontSize: '9px', 
+                      color: 'var(--text-200)',
+                      opacity: 0.7
+                    }}>
+                      💬
+                    </span>
+                  )}
+                  
+                  {/* インラインツールチップ */}
+                  {tooltip && tooltip.routeId === rr.routeId && rr.comment && rr.comment.trim() && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        left: '50%',
+                        bottom: 'calc(100% + 8px)',
+                        transform: 'translateX(-50%)',
+                        background: 'var(--bg-300)',
+                        color: 'var(--text-100)',
+                        padding: '8px 12px',
+                        borderRadius: '8px',
+                        fontSize: '12px',
+                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.2)',
+                        border: '1px solid var(--primary-100)',
+                        minWidth: '120px',
+                        maxWidth: '250px',
+                        zIndex: 10000,
+                        pointerEvents: 'none',
+                        whiteSpace: 'pre-wrap',
+                        wordBreak: 'break-word',
+                        lineHeight: '1.5'
+                      }}
+                    >
+                      <div style={{ 
+                        fontSize: '10px', 
+                        color: 'var(--text-200)', 
+                        marginBottom: '4px',
+                        fontWeight: 'bold',
+                        borderBottom: '1px solid var(--bg-200)',
+                        paddingBottom: '4px'
+                      }}>
+                        📍 {rr.routeName}
+                      </div>
+                      <div style={{ fontSize: '11px', marginTop: '4px' }}>
+                        {rr.comment}
+                      </div>
+                      {/* 下向き矢印 */}
+                      <div
+                        style={{
+                          position: 'absolute',
+                          bottom: '-6px',
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          width: 0,
+                          height: 0,
+                          borderLeft: '6px solid transparent',
+                          borderRight: '6px solid transparent',
+                          borderTop: '6px solid var(--primary-100)'
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* ルート一覧 */}
-      <div className="card" style={{ padding: '16px' }}>
+      <div className="card checklist-card" style={{ padding: '16px' }}>
         <div style={{ marginBottom: '16px' }}>
           <h2 style={{ color: 'var(--text-100)', fontSize: '18px', fontWeight: 'bold' }}>
             📍 チェックリスト
@@ -381,7 +521,6 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
           borderRadius: '10px',
           backgroundColor: routeRun.hasRemaining ? 'var(--bg-100)' : 'var(--bg-300)',
           cursor: 'pointer',
-          transition: 'all 0.2s',
           userSelect: 'none'
         }}
       >
@@ -397,7 +536,8 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
             color: 'white',
             fontSize: '12px',
             fontWeight: 'bold',
-            flexShrink: 0
+            flexShrink: 0,
+            transition: 'all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)'
           }}>
             {routeRun.hasRemaining ? '✕' : '✓'}
           </div>
@@ -413,6 +553,7 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
         {routeRun.hasRemaining && (
           <div 
             onClick={(e) => e.stopPropagation()}
+            className="route-item-detail"
             style={{ 
               marginTop: '12px', 
               paddingTop: '12px', 
@@ -421,13 +562,14 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
             }}
           >
             <div style={{ display: 'flex', gap: '10px', marginBottom: '10px', flexWrap: 'wrap' }}>
-              <div style={{ flex: '0 0 70px' }}>
+              <div className="input-field-container" style={{ flex: '0 0 70px' }}>
                 <label style={{ fontSize: '11px', marginBottom: '4px', color: 'var(--text-100)', fontWeight: 'bold', display: 'block' }}>残数</label>
                 <input
                   type="number"
                   min="0"
                   value={routeRun.remainingCount}
                   onChange={(e) => updateRemainingCount(routeRun.routeId, parseInt(e.target.value) || 0)}
+                  className="input-interactive"
                   style={{ 
                     padding: '8px', 
                     textAlign: 'center', 
@@ -435,23 +577,24 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
                     fontSize: '14px',
                     background: 'var(--bg-200)',
                     color: 'var(--text-100)',
-                    border: '1px solid var(--primary-100)',
+                    border: '2px solid var(--primary-100)',
                     borderRadius: '6px'
                   }}
                 />
               </div>
-              <div style={{ flex: 1, minWidth: '120px' }}>
+              <div className="input-field-container" style={{ flex: 1, minWidth: '120px' }}>
                 <label style={{ fontSize: '11px', marginBottom: '4px', color: 'var(--text-100)', fontWeight: 'bold', display: 'block' }}>メモ</label>
                 <input
                   type="text"
                   value={routeRun.comment}
                   onChange={(e) => updateComment(routeRun.routeId, e.target.value)}
                   placeholder="理由、精鋭名など..."
+                  className="input-interactive"
                   style={{ 
                     padding: '8px',
                     background: 'var(--bg-200)',
                     color: 'var(--text-100)',
-                    border: '1px solid var(--accent-100)',
+                    border: '2px solid var(--accent-100)',
                     borderRadius: '6px',
                     fontSize: '13px'
                   }}

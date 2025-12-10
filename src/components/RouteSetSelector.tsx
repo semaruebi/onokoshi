@@ -14,7 +14,7 @@ interface RouteSetSelectorProps {
 export const RouteSetSelector = ({ routeSets, onSelect, onCancel, onRouteSetDeleted }: RouteSetSelectorProps) => {
   const [editingRouteSet, setEditingRouteSet] = useState<RouteSet | null>(null);
   const [editName, setEditName] = useState('');
-  const [editExpectedCount, setEditExpectedCount] = useState(0);
+  const [editExpectedCount, setEditExpectedCount] = useState(400);
   const [editRouteText, setEditRouteText] = useState('');
 
   const handleDelete = async (e: React.MouseEvent, routeSetId: string) => {
@@ -35,12 +35,17 @@ export const RouteSetSelector = ({ routeSets, onSelect, onCancel, onRouteSetDele
     setEditingRouteSet(routeSet);
     setEditName(routeSet.name);
     setEditExpectedCount(routeSet.expectedEliteCount);
-    // ルートをテキスト形式に変換
-    const routeText = routeSet.routes.map(r => {
-      const prefix = r.groupName ? `-${r.name}` : r.name;
-      return r.count > 0 ? `${prefix}(${r.count})` : prefix;
-    }).join('\n');
-    setEditRouteText(routeText);
+    // 元のテキストフォーマットがあればそれを使用、なければ再構築
+    if (routeSet.originalText) {
+      setEditRouteText(routeSet.originalText);
+    } else {
+      // フォールバック: ルートをテキスト形式に変換
+      const routeText = routeSet.routes.map(r => {
+        const prefix = r.groupName ? `-${r.name}` : r.name;
+        return r.count > 0 ? `${prefix}(${r.count})` : prefix;
+      }).join('\n');
+      setEditRouteText(routeText);
+    }
   };
 
   const handleSaveEdit = async () => {
@@ -63,7 +68,8 @@ export const RouteSetSelector = ({ routeSets, onSelect, onCancel, onRouteSetDele
         name: editName.trim(),
         expectedEliteCount: editExpectedCount,
         routes,
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        originalText: editRouteText.trim() // 編集後のテキストも元のフォーマットとして保存
       };
       await saveRouteSet(updatedRouteSet);
       setEditingRouteSet(null);
@@ -96,7 +102,7 @@ export const RouteSetSelector = ({ routeSets, onSelect, onCancel, onRouteSetDele
           ✏️ ルートセットを編集
         </h2>
         
-        <div style={{ marginBottom: '16px' }}>
+        <div className="input-field-container" style={{ marginBottom: '16px' }}>
           <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: 'var(--text-100)' }}>
             ルートリスト (Subsplits対応)
           </label>
@@ -104,11 +110,12 @@ export const RouteSetSelector = ({ routeSets, onSelect, onCancel, onRouteSetDele
             type="text"
             value={editName}
             onChange={(e) => setEditName(e.target.value)}
+            className="input-interactive"
             style={{ width: '100%', padding: '12px', fontSize: '14px' }}
           />
         </div>
 
-        <div style={{ marginBottom: '16px' }}>
+        <div className="input-field-container" style={{ marginBottom: '16px' }}>
           <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: 'var(--text-100)' }}>
             想定精鋭数
           </label>
@@ -116,17 +123,19 @@ export const RouteSetSelector = ({ routeSets, onSelect, onCancel, onRouteSetDele
             type="number"
             value={editExpectedCount || ''}
             onChange={(e) => setEditExpectedCount(parseInt(e.target.value) || 0)}
+            className="input-interactive"
             style={{ width: '100%', padding: '12px', fontSize: '14px' }}
           />
         </div>
 
-        <div style={{ marginBottom: '16px' }}>
+        <div className="input-field-container" style={{ marginBottom: '16px' }}>
           <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: 'var(--text-100)' }}>
             ルートリスト
           </label>
           <textarea
             value={editRouteText}
             onChange={(e) => setEditRouteText(e.target.value)}
+            className="input-interactive"
             style={{ width: '100%', minHeight: '200px', padding: '12px', fontSize: '14px' }}
           />
           <div style={{ marginTop: '8px', fontSize: '12px', color: 'var(--text-200)' }}>

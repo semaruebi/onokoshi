@@ -151,28 +151,59 @@ function App() {
           </p>
         </div>
         
-        {/* テーマ切り替え: 控えめだがアクセスしやすい位置 */}
+        {/* テーマ切り替え: 目立つデザイン */}
         <button
           onClick={(e) => {
             e.stopPropagation();
             toggleTheme();
           }}
-          className="secondary-button"
+          className="theme-toggle-button"
           style={{
             position: 'absolute',
             top: '20px',
             right: '0',
-            padding: '8px 16px',
+            padding: '10px 20px',
             minHeight: 'auto',
-            borderRadius: '20px',
-            fontSize: '13px',
-            background: 'var(--bg-glass)',
-            backdropFilter: 'blur(4px)',
-            boxShadow: 'var(--shadow-sm)'
+            borderRadius: '24px',
+            fontSize: '14px',
+            fontWeight: '700',
+            background: theme === 'light' 
+              ? 'linear-gradient(135deg, #7E57C2 0%, #5E35B1 100%)'
+              : 'linear-gradient(135deg, #4A148C 0%, #6A1B9A 100%)',
+            color: '#FFFFFF',
+            border: theme === 'light' 
+              ? '2px solid #5E35B1'
+              : '2px solid #7C4DFF',
+            boxShadow: theme === 'light'
+              ? '0 4px 16px rgba(94, 53, 177, 0.4), 0 0 0 2px rgba(94, 53, 177, 0.1)'
+              : '0 4px 16px rgba(124, 77, 255, 0.5), 0 0 0 2px rgba(124, 77, 255, 0.2)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            transition: 'all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)',
+            cursor: 'pointer',
+            zIndex: 1000
           }}
           title={theme === 'light' ? '常夜モードへ' : '白夜モードへ'}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-2px) scale(1.05)';
+            e.currentTarget.style.boxShadow = theme === 'light'
+              ? '0 6px 24px rgba(94, 53, 177, 0.6), 0 0 0 3px rgba(94, 53, 177, 0.2)'
+              : '0 6px 24px rgba(124, 77, 255, 0.7), 0 0 0 3px rgba(124, 77, 255, 0.3)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0) scale(1)';
+            e.currentTarget.style.boxShadow = theme === 'light'
+              ? '0 4px 16px rgba(94, 53, 177, 0.4), 0 0 0 2px rgba(94, 53, 177, 0.1)'
+              : '0 4px 16px rgba(124, 77, 255, 0.5), 0 0 0 2px rgba(124, 77, 255, 0.2)';
+          }}
         >
-          {theme === 'light' ? '🌙' : '☀️'}
+          <span style={{ fontSize: '18px', lineHeight: '1' }}>
+            {theme === 'light' ? '🌙' : '☀️'}
+          </span>
+          <span style={{ fontWeight: '700', letterSpacing: '0.05em' }}>
+            {theme === 'light' ? '常夜' : '白夜'}
+          </span>
         </button>
       </div>
 
@@ -239,7 +270,7 @@ function App() {
                 boxShadow: '0 8px 24px rgba(124, 77, 255, 0.25)'
               }}
             >
-              <span>✨ 新しいハントを始める</span>
+              <span>✨ 記録を始める</span>
             </button>
           </div>
           <RouteSetForm onRouteSetAdded={loadRouteSets} />

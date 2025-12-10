@@ -19,7 +19,7 @@ export const Statistics = ({ runs }: StatisticsProps) => {
     return (
       <div className="card">
         <p style={{ color: 'var(--text-200)', textAlign: 'center' }}>
-          統計情報を表示するには、RUNデータが必要です。
+          統計情報を表示するには、記録データが必要です。
         </p>
       </div>
     );

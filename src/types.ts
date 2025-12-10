@@ -15,6 +15,7 @@ export interface RouteSet {
   expectedEliteCount: number; // 想定精鋭数
   createdAt: string;
   updatedAt: string;
+  originalText?: string; // 登録時の元のテキストフォーマット（-や{}を含む）
 }
 
 // RUNデータ（プロジェクト単位）

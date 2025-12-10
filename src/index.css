@@ -60,6 +60,7 @@ body {
   margin-bottom: 24px;
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
   animation: scaleIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  overflow: hidden; /* カード内の要素がはみ出さないようにする */
 }
 
 .card:hover {
@@ -110,7 +111,7 @@ button {
   font-family: inherit;
   font-weight: 700;
   letter-spacing: 0.03em;
-  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -120,13 +121,33 @@ button {
   overflow: hidden;
 }
 
+button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease, height 0.4s ease;
+}
+
+button:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
 button:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.05);
+  transform: translateY(-3px) scale(1.02);
+  filter: brightness(1.1);
+  box-shadow: 0 6px 20px rgba(124, 77, 255, 0.3);
 }
 
 button:active {
-  transform: scale(0.97);
+  transform: scale(0.96);
+  transition: transform 0.1s;
 }
 
 /* Primary Button: グラデーションと光沢 */
@@ -137,7 +158,17 @@ button:active {
 }
 
 .primary-button:hover {
-  box-shadow: 0 8px 20px rgba(124, 77, 255, 0.4);
+  box-shadow: 0 8px 24px rgba(124, 77, 255, 0.5), 0 0 20px rgba(124, 77, 255, 0.3);
+  animation: button-glow 2s ease-in-out infinite;
+}
+
+@keyframes button-glow {
+  0%, 100% {
+    box-shadow: 0 8px 24px rgba(124, 77, 255, 0.5), 0 0 20px rgba(124, 77, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 8px 24px rgba(124, 77, 255, 0.6), 0 0 30px rgba(124, 77, 255, 0.4);
+  }
 }
 
 /* Secondary Button: 控えめだが明確 */
@@ -151,6 +182,7 @@ button:active {
   background: var(--bg-300);
   color: var(--primary-100);
   border-color: var(--primary-100);
+  box-shadow: 0 4px 12px rgba(124, 77, 255, 0.2);
 }
 
 /* 入力フォーム（クリアで使いやすく - アフォーダンス） */
@@ -161,21 +193,36 @@ input, textarea, select {
   padding: 16px 20px;
   font-size: 16px;
   font-family: inherit;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
   background: var(--bg-100);
   color: var(--text-100);
+  position: relative;
+}
+
+input:hover, textarea:hover, select:hover {
+  border-color: var(--primary-100);
+  background: var(--bg-200);
+  /* transformとbox-shadowを無効化して親要素からはみ出さないようにする */
 }
 
 input:focus, textarea:focus, select:focus {
   outline: none;
   border-color: var(--primary-100);
   background: var(--bg-300);
-  box-shadow: 0 0 0 4px rgba(124, 77, 255, 0.15); /* フォーカスリング */
+  box-shadow: inset 0 0 0 2px rgba(124, 77, 255, 0.15); /* insetで内側のみにシャドウ */
+  /* transformとアニメーションを無効化して親要素からはみ出さないようにする */
 }
+
+/* input-pulseアニメーションは削除（親要素からはみ出すため） */
 
 input::placeholder, textarea::placeholder {
   color: var(--text-300);
   opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+input:hover::placeholder, textarea:hover::placeholder {
+  opacity: 0.6;
 }
 
 label {
@@ -211,7 +258,126 @@ label {
 .text-gradient {
   background: linear-gradient(135deg, var(--primary-100), var(--accent-200));
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/* 入力可能フィールドの視覚的インジケーター */
+.input-interactive {
+  position: relative;
+  transition: border-color 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* transformやbox-shadowアニメーションは使わない */
+}
+
+.input-interactive::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  border: 2px solid transparent;
+  pointer-events: none;
+  transition: border-color 0.3s;
+  box-sizing: border-box;
+}
+
+.input-interactive:hover::after {
+  border-color: var(--primary-100);
+  /* アニメーションを無効化 */
+}
+
+/* 入力可能なラベル付きフィールドコンテナ */
+.input-field-container {
+  position: relative;
+  transition: color 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* transformは使わず、色の変化のみ */
+}
+
+.input-field-container:hover label {
+  color: var(--primary-100);
+  /* transformを無効化 */
+}
+
+.input-field-container label {
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  display: block;
+}
+
+/* ルートカードのホバーエフェクト */
+.route-item {
+  position: relative;
+  overflow: hidden; /* 常にhiddenを維持して親要素からはみ出さないようにする */
+  transition: border-color 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  /* transformやbox-shadowは使わず、色の変化のみでアニメーション */
+}
+
+.route-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(124, 77, 255, 0.1), transparent);
+  transition: left 0.5s ease;
+  z-index: 0;
+  pointer-events: none; /* クリックイベントを妨げない */
+}
+
+.route-item:hover::before {
+  left: 100%;
+}
+
+.route-item:hover {
+  /* transformやbox-shadowを使わず、色の変化のみ */
+  border-color: var(--primary-100) !important;
+  background: var(--bg-100) !important;
+}
+
+/* 展開された詳細部分がある場合はスイープエフェクトを無効化 */
+.route-item:has(.route-item-detail)::before {
+  display: none;
+}
+
+.route-item:active {
+  transition: all 0.1s;
+}
+
+/* 詳細部分内の入力フィールドコンテナのアニメーションを控えめに */
+.route-item-detail .input-field-container {
+  transform: none;
+}
+
+.route-item-detail .input-field-container:hover {
+  transform: none;
+}
+
+.route-item-detail .input-field-container:hover label {
+  transform: none;
+  color: var(--text-100);
+}
+
+/* チェックリスト内のルートカードのみアニメーションを制限 */
+.checklist-card .route-item {
+  overflow: hidden;
+}
+
+.checklist-card .route-item:hover {
+  /* transformやbox-shadowを使わず、色の変化のみ */
+  border-color: var(--primary-100) !important;
+  background: var(--bg-100) !important;
+}
+
+.checklist-card .route-item:has(.route-item-detail)::before {
+  display: none;
+}
+
+/* チェックリスト内のルートカードのチェックアイコンのアニメーションも制限 */
+.checklist-card .route-item:hover > div > div:first-child {
+  transform: none;
+  box-shadow: none;
 }
 
 /* レスポンシブ */

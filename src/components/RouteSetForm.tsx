@@ -11,7 +11,7 @@ interface RouteSetFormProps {
 export const RouteSetForm = ({ onRouteSetAdded }: RouteSetFormProps) => {
   const [routeSetName, setRouteSetName] = useState('');
   const [routeText, setRouteText] = useState('');
-  const [expectedEliteCount, setExpectedEliteCount] = useState<number>(0);
+  const [expectedEliteCount, setExpectedEliteCount] = useState<number>(400);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,7 +40,8 @@ export const RouteSetForm = ({ onRouteSetAdded }: RouteSetFormProps) => {
         routes,
         expectedEliteCount: expectedEliteCount || 0,
         createdAt: now,
-        updatedAt: now
+        updatedAt: now,
+        originalText: routeText.trim() // 元のテキストフォーマットを保存
       };
 
       await saveRouteSet(routeSet);
@@ -61,7 +62,7 @@ export const RouteSetForm = ({ onRouteSetAdded }: RouteSetFormProps) => {
         🗺️ ルートセットを登録
       </h2>
       <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '16px' }}>
+        <div className="input-field-container" style={{ marginBottom: '16px' }}>
           <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: 'var(--text-100)' }}>
             ルートセット名
           </label>
@@ -70,9 +71,10 @@ export const RouteSetForm = ({ onRouteSetAdded }: RouteSetFormProps) => {
             value={routeSetName}
             onChange={(e) => setRouteSetName(e.target.value)}
             placeholder="例: 400EE NPuI No LeyLine / ぼくのかんがえたさいきょうのるーと"
+            className="input-interactive"
           />
         </div>
-        <div style={{ marginBottom: '24px' }}>
+        <div className="input-field-container" style={{ marginBottom: '24px' }}>
           <label>
             想定精鋭数
           </label>
@@ -80,10 +82,11 @@ export const RouteSetForm = ({ onRouteSetAdded }: RouteSetFormProps) => {
             type="number"
             value={expectedEliteCount || ''}
             onChange={(e) => setExpectedEliteCount(parseInt(e.target.value) || 0)}
-            placeholder="例: 100"
+            placeholder="例: 400"
+            className="input-interactive"
           />
         </div>
-        <div style={{ marginBottom: '24px' }}>
+        <div className="input-field-container" style={{ marginBottom: '24px' }}>
           <label>
             ルートリスト (Subsplits対応)
           </label>
@@ -92,6 +95,7 @@ export const RouteSetForm = ({ onRouteSetAdded }: RouteSetFormProps) => {
             onChange={(e) => setRouteText(e.target.value)}
             placeholder="かつヴァナ 5&#10;聖遺殿 8&#10;...&#10;（livesplitのsegmentをそのまま貼り付けでOK)"
             style={{ minHeight: '120px' }}
+            className="input-interactive"
           />
           <div style={{ marginTop: '12px', fontSize: '13px', color: 'var(--text-200)', lineHeight: '1.5' }}>
             形式: ルート名 精鋭数（例: かつヴァナ 5、かつヴァナ (5)、かつヴァナ）<br />
