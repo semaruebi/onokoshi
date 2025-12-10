@@ -1,27 +1,40 @@
 @import './styles/themes.css';
 
+@font-face {
+  font-family: 'GenshinFont';
+  src: url('../../assets/fonts/ja-jp.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent; /* モバイルでのタップハイライトを無効化 */
 }
 
 body {
-  font-family: 'Segoe UI', 'Helvetica Neue', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
+  font-family: 'GenshinFont', 'Segoe UI', 'Helvetica Neue', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--bg-100);
   color: var(--text-100);
   min-height: 100vh;
-  padding: 20px;
+  padding: 24px;
   transition: background-color 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.4s;
   line-height: 1.6;
+  background-image: 
+    radial-gradient(circle at 10% 20%, var(--accent-100) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, var(--primary-200) 0%, transparent 20%);
+  background-attachment: fixed;
 }
 
 #root {
-  max-width: 1000px; /* 少し狭くして視線移動を減らす */
+  max-width: 900px; /* 視線移動を最適化 */
   margin: 0 auto;
-  padding-bottom: 80px; /* 下部に余白 */
+  padding-bottom: 80px;
 }
 
 /* アニメーション定義 */
@@ -31,48 +44,80 @@ body {
 }
 
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.95); }
+  from { opacity: 0; transform: scale(0.98); }
   to { opacity: 1; transform: scale(1); }
 }
 
-/* カードスタイル（Glassmorphism要素を取り入れ） */
+/* Glassmorphism Card */
 .card {
-  background: var(--bg-300);
-  border-radius: 20px; /* より丸く */
-  padding: 24px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05); /* 柔らかい影 */
+  background: var(--bg-glass);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-glass);
+  border-radius: 24px; /* 大きな角丸で親しみやすく */
+  padding: 32px; /* ゆとりのあるパディング */
+  box-shadow: var(--shadow-sm);
   margin-bottom: 24px;
-  border: 1px solid var(--bg-200);
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s;
-  animation: scaleIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  animation: scaleIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 .card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-md);
+  /* ホバー時は控えめに浮く */
 }
 
 /* インタラクティブなカード */
 .selectable-card {
-  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  background: var(--bg-300);
+  border-radius: 20px;
+  border: 1px solid transparent;
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
   animation: fadeIn 0.4s ease-out forwards;
+  position: relative;
+  overflow: hidden;
 }
 
-/* ボタン（モダンで押しやすい形状） */
+.selectable-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary-100), var(--accent-200));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.selectable-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary-100);
+}
+
+.selectable-card:hover::before {
+  opacity: 1;
+}
+
+/* ボタン（モダンで押しやすい形状 - フィッツの法則） */
 button {
   cursor: pointer;
   border: none;
-  border-radius: 12px;
-  padding: 12px 24px;
+  border-radius: 16px; /* より丸く */
+  padding: 14px 28px;
   font-size: 15px;
+  font-family: inherit;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
   transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  min-height: 48px; /* フィッツの法則 */
+  gap: 10px;
+  min-height: 52px; /* タップターゲット確保 */
+  position: relative;
+  overflow: hidden;
 }
 
 button:hover {
@@ -81,65 +126,71 @@ button:hover {
 }
 
 button:active {
-  transform: scale(0.96);
+  transform: scale(0.97);
 }
 
+/* Primary Button: グラデーションと光沢 */
 .primary-button {
-  background: linear-gradient(135deg, var(--primary-100) 0%, var(--accent-200) 100%);
-  color: #fff; /* コントラスト確保のため白固定 */
-  box-shadow: 0 4px 12px rgba(139, 95, 191, 0.3);
+  background: linear-gradient(135deg, var(--primary-100) 0%, var(--primary-200) 100%);
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(124, 77, 255, 0.3);
 }
 
 .primary-button:hover {
-  box-shadow: 0 6px 16px rgba(139, 95, 191, 0.4);
+  box-shadow: 0 8px 20px rgba(124, 77, 255, 0.4);
 }
 
+/* Secondary Button: 控えめだが明確 */
 .secondary-button {
   background: var(--bg-200);
-  color: var(--text-100);
+  color: var(--text-200);
+  border: 1px solid var(--border-glass);
 }
 
 .secondary-button:hover {
-  background: var(--accent-100);
+  background: var(--bg-300);
+  color: var(--primary-100);
+  border-color: var(--primary-100);
 }
 
-/* 入力フォーム（クリアで使いやすく） */
-input, textarea {
+/* 入力フォーム（クリアで使いやすく - アフォーダンス） */
+input, textarea, select {
   width: 100%;
   border: 2px solid var(--bg-200);
-  border-radius: 12px;
-  padding: 14px 16px;
-  font-size: 16px; /* 読みやすいサイズ */
+  border-radius: 16px;
+  padding: 16px 20px;
+  font-size: 16px;
   font-family: inherit;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
   background: var(--bg-100);
   color: var(--text-100);
 }
 
-input:focus, textarea:focus {
+input:focus, textarea:focus, select:focus {
   outline: none;
   border-color: var(--primary-100);
   background: var(--bg-300);
-  box-shadow: 0 0 0 4px rgba(139, 95, 191, 0.1);
+  box-shadow: 0 0 0 4px rgba(124, 77, 255, 0.15); /* フォーカスリング */
 }
 
 input::placeholder, textarea::placeholder {
-  color: var(--text-200);
-  opacity: 0.7;
+  color: var(--text-300);
+  opacity: 0.8;
 }
 
 label {
   display: block;
-  margin-bottom: 8px;
-  font-weight: 600;
+  margin-bottom: 10px;
+  font-weight: 700;
   color: var(--text-200);
   font-size: 14px;
+  letter-spacing: 0.02em;
 }
 
-/* スクロールバーのカスタマイズ */
+/* スクロールバー */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 10px;
+  height: 10px;
 }
 
 ::-webkit-scrollbar-track {
@@ -147,26 +198,38 @@ label {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--accent-100);
-  border-radius: 4px;
+  background: var(--accent-200);
+  border-radius: 5px;
+  border: 2px solid var(--bg-100);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent-200);
+  background: var(--primary-100);
 }
 
-/* レスポンシブ対応 */
+/* ユーティリティ */
+.text-gradient {
+  background: linear-gradient(135deg, var(--primary-100), var(--accent-200));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* レスポンシブ */
 @media (max-width: 768px) {
   body {
-    padding: 16px 12px;
+    padding: 16px;
   }
   
   .card {
-    padding: 20px;
-    border-radius: 16px;
+    padding: 24px;
+    border-radius: 20px;
   }
   
   h1 {
-    font-size: 24px !important;
+    font-size: 22px !important;
+  }
+  
+  button {
+    width: 100%; /* モバイルでは全幅ボタンが押しやすい */
   }
 }

@@ -24,29 +24,30 @@ export const RunList = ({ runs, onRunSelect, onRunDeleted }: RunListProps) => {
 
   if (runs.length === 0) {
     return (
-      <div className="card" style={{ textAlign: 'center', padding: '48px 20px', background: 'var(--bg-200)', borderStyle: 'dashed' }}>
-        <p style={{ color: 'var(--text-200)', fontSize: '16px', fontWeight: 600 }}>
-          まだ記録がありません 📝
+      <div className="card" style={{ textAlign: 'center', padding: '60px 20px', background: 'var(--bg-glass)', borderStyle: 'dashed', borderColor: 'var(--border-glass)' }}>
+        <div style={{ fontSize: '48px', marginBottom: '16px', opacity: 0.5 }}>📝</div>
+        <p style={{ color: 'var(--text-100)', fontSize: '18px', fontWeight: 700, marginBottom: '8px' }}>
+          まだ記録がありません
         </p>
-        <p style={{ color: 'var(--text-200)', fontSize: '14px', marginTop: '8px', opacity: 0.8 }}>
-          「新規作成」ボタンから今日の結果を確認しましょう！
+        <p style={{ color: 'var(--text-200)', fontSize: '14px', maxWidth: '300px', margin: '0 auto', lineHeight: '1.6' }}>
+          「新規作成」ボタンから、今日のハントの記録を始めましょう！
         </p>
       </div>
     );
   }
 
   return (
-    <div className="card" style={{ background: 'transparent', boxShadow: 'none', padding: 0, border: 'none' }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', padding: '0 4px' }}>
-        <h2 style={{ color: 'var(--text-100)', fontSize: '18px', fontWeight: 'bold', display: 'flex', alignItems: 'center', gap: '8px' }}>
+    <div style={{ marginTop: '32px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', padding: '0 8px' }}>
+        <h2 style={{ color: 'var(--text-100)', fontSize: '20px', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '12px' }}>
           📋 狩り残しの記録
-          <span style={{ fontSize: '12px', fontWeight: 'normal', color: 'var(--text-200)', background: 'var(--bg-200)', padding: '2px 8px', borderRadius: '12px' }}>
+          <span style={{ fontSize: '13px', fontWeight: '600', color: 'var(--primary-200)', background: 'var(--accent-100)', padding: '4px 12px', borderRadius: '16px' }}>
             {runs.length}件
           </span>
         </h2>
       </div>
       
-      <div style={{ display: 'grid', gap: '12px' }}>
+      <div style={{ display: 'grid', gap: '16px' }}>
         {runs.map((run) => {
           const remainingCount = run.routes
             .filter(r => r.hasRemaining)

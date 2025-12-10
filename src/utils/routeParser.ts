@@ -4,7 +4,7 @@ import { Route } from '../types';
  * テキスト入力からルートのリストをパースする
  * 対応形式:
  * - "-ルート名(5)" -> 子ルート（グループに属する）
- * - "{グループ名(33)}ルート名(2)" -> グループの境界、右側のルートもそのグループに属する
+ * - "{グループ名(33)}ルート名(2)" -> グループの境界（次のグループの先頭）
  * - "ルート名 5" -> 通常のルート
  * - "ルート名 (5)" -> 通常のルート
  * - "ルート名" -> 通常のルート（count=0）
@@ -22,10 +22,10 @@ export const parseRouteText = (text: string): Route[] => {
     return lines.map((line, index) => parseSimpleLine(line, index));
   }
 
-  // グループ化あり
-  // 下から上に処理してグループを割り当て
+  // グループ化あり - 逆順に処理してグループを割り当て
   const routes: Route[] = [];
   let currentGroupName: string | undefined = undefined;
+  let pendingChildren: { line: string; index: number }[] = [];
 
   // 下から上に処理
   for (let i = lines.length - 1; i >= 0; i--) {
@@ -43,20 +43,32 @@ export const parseRouteText = (text: string): Route[] => {
       const groupNameMatch = groupPart.match(/^(.+?)\s*\(?\d*\)?\s*$/);
       currentGroupName = groupNameMatch ? groupNameMatch[1].trim() : groupPart.trim();
       
-      // グループマーカー行自体にもルートがあれば、このグループに追加
-      if (routePart) {
-        const route = parseSimpleLine(routePart, i, currentGroupName);
+      // このグループより上にある子ルートにグループ名を割り当て
+      for (const child of pendingChildren) {
+        const route = parseSimpleLine(child.line, child.index, currentGroupName);
         routes.push(route);
       }
+      pendingChildren = [];
+      
+      // グループマーカー行自体にもルートがあれば追加（次のグループの最初のルート）
+      if (routePart) {
+        // このルートは次のグループに属する（まだわからないのでundefined）
+        pendingChildren.push({ line: routePart, index: i });
+      }
     } else if (line.startsWith('-')) {
-      // 子ルート - 現在のグループに属する
-      const route = parseSimpleLine(line, i, currentGroupName);
-      routes.push(route);
+      // 子ルート - 後で処理
+      pendingChildren.push({ line, index: i });
     } else {
       // グループ化形式でない行 - そのまま追加
       const route = parseSimpleLine(line, i);
       routes.push(route);
     }
+  }
+  
+  // 残りの子ルート（最初のグループがなかった場合）
+  for (const child of pendingChildren) {
+    const route = parseSimpleLine(child.line, child.index, currentGroupName);
+    routes.push(route);
   }
   
   // 元の順序に戻す

@@ -98,7 +98,7 @@ export const RouteSetSelector = ({ routeSets, onSelect, onCancel, onRouteSetDele
         
         <div style={{ marginBottom: '16px' }}>
           <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: 'var(--text-100)' }}>
-            ルートセット名
+            ルートリスト (Subsplits対応)
           </label>
           <input
             type="text"
@@ -153,12 +153,17 @@ export const RouteSetSelector = ({ routeSets, onSelect, onCancel, onRouteSetDele
   }
 
   return (
-    <div style={{ maxWidth: '800px', margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h2 style={{ color: 'var(--text-100)', fontSize: '20px', fontWeight: 'bold' }}>
-          🗺️ ルートセットを選択
-        </h2>
-        <button onClick={onCancel} className="secondary-button" style={{ padding: '8px 16px', fontSize: '13px', minHeight: '36px' }}>
+    <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
+        <div>
+          <h2 style={{ color: 'var(--text-100)', fontSize: '24px', fontWeight: '800', marginBottom: '4px' }}>
+            🗺️ ルートセットを選択
+          </h2>
+          <p style={{ color: 'var(--text-200)', fontSize: '14px' }}>
+            本日のハントに使用するルートを選んでください
+          </p>
+        </div>
+        <button onClick={onCancel} className="secondary-button">
           キャンセル
         </button>
       </div>
@@ -166,8 +171,8 @@ export const RouteSetSelector = ({ routeSets, onSelect, onCancel, onRouteSetDele
       <div style={{ 
         display: 'grid', 
         gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', 
-        gap: '16px',
-        marginBottom: '24px'
+        gap: '24px',
+        marginBottom: '40px'
       }}>
         {routeSets.map((routeSet) => (
           <div
@@ -175,57 +180,81 @@ export const RouteSetSelector = ({ routeSets, onSelect, onCancel, onRouteSetDele
             onClick={() => onSelect(routeSet)}
             className="selectable-card"
             style={{
-              padding: '20px',
-              borderRadius: '16px',
+              padding: '24px',
               cursor: 'pointer',
-              backgroundColor: 'var(--bg-300)',
-              border: '1px solid var(--bg-200)',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
-              position: 'relative',
-              transition: 'all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-4px)';
-              e.currentTarget.style.boxShadow = '0 12px 24px rgba(139, 95, 191, 0.15)';
-              e.currentTarget.style.borderColor = 'var(--primary-100)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.03)';
-              e.currentTarget.style.borderColor = 'var(--bg-200)';
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              minHeight: '160px'
             }}
           >
-            <div style={{ marginBottom: '12px' }}>
-              <div style={{ fontWeight: 'bold', fontSize: '18px', color: 'var(--text-100)', marginBottom: '4px' }}>
+            <div>
+              <div style={{ 
+                fontWeight: '800', 
+                fontSize: '20px', 
+                color: 'var(--text-100)', 
+                marginBottom: '8px',
+                lineHeight: 1.4
+              }}>
                 {routeSet.name}
               </div>
-              <div style={{ fontSize: '13px', color: 'var(--text-200)', display: 'flex', gap: '12px' }}>
-                <span>📦 {routeSet.routes.length} ルート</span>
+              <div style={{ 
+                fontSize: '14px', 
+                color: 'var(--text-200)', 
+                display: 'flex', 
+                flexWrap: 'wrap',
+                gap: '12px',
+                marginTop: '12px' 
+              }}>
+                <span style={{ 
+                  background: 'var(--bg-100)', 
+                  padding: '4px 10px', 
+                  borderRadius: '20px',
+                  fontSize: '12px',
+                  fontWeight: '600'
+                }}>
+                  📦 {routeSet.routes.length} ルート
+                </span>
                 {routeSet.expectedEliteCount > 0 && (
-                  <span>🎯 想定 {routeSet.expectedEliteCount} 体</span>
+                  <span style={{ 
+                    background: 'var(--accent-100)', 
+                    color: 'var(--accent-200)',
+                    padding: '4px 10px', 
+                    borderRadius: '20px',
+                    fontSize: '12px',
+                    fontWeight: '600'
+                  }}>
+                    🎯 想定 {routeSet.expectedEliteCount} 体
+                  </span>
                 )}
               </div>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '8px', marginTop: '16px' }}>
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'flex-end', 
+              gap: '8px', 
+              marginTop: '24px',
+              borderTop: '1px solid var(--bg-200)',
+              paddingTop: '16px'
+            }}>
               <button
                 onClick={(e) => handleEdit(e, routeSet)}
                 style={{
-                  background: 'var(--bg-200)',
-                  color: 'var(--text-100)',
-                  fontSize: '12px',
-                  padding: '6px 12px',
-                  borderRadius: '8px',
+                  background: 'transparent',
+                  color: 'var(--text-200)',
+                  fontSize: '13px',
+                  padding: '8px 16px',
+                  borderRadius: '12px',
                   minHeight: 'auto',
-                  border: '1px solid var(--accent-100)'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'var(--primary-100)';
-                  e.currentTarget.style.color = 'var(--primary-300)';
+                  e.currentTarget.style.background = 'var(--bg-200)';
+                  e.currentTarget.style.color = 'var(--primary-200)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'var(--bg-200)';
-                  e.currentTarget.style.color = 'var(--text-100)';
+                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.color = 'var(--text-200)';
                 }}
               >
                 編集
@@ -235,15 +264,14 @@ export const RouteSetSelector = ({ routeSets, onSelect, onCancel, onRouteSetDele
                 style={{
                   background: 'transparent',
                   color: 'var(--text-300)',
-                  fontSize: '12px',
-                  padding: '6px 12px',
-                  borderRadius: '8px',
+                  fontSize: '13px',
+                  padding: '8px 16px',
+                  borderRadius: '12px',
                   minHeight: 'auto',
-                  border: '1px solid transparent'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = 'var(--bg-100)';
-                  e.currentTarget.style.color = '#FF6B6B';
+                  e.currentTarget.style.background = '#FFEBEE';
+                  e.currentTarget.style.color = '#D32F2F';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'transparent';

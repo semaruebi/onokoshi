@@ -112,86 +112,94 @@ function App() {
   };
 
   return (
-    <div style={{ paddingTop: '8px' }}>
-      {/* ヘッダー */}
-      <div style={{ position: 'relative', marginBottom: '24px' }}>
+    <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+      {/* ヘッダー: 視線を集めるクリーンなデザイン */}
+      <div style={{ 
+        position: 'relative', 
+        marginBottom: '40px',
+        textAlign: 'center',
+        padding: '20px 0'
+      }}>
         <div 
           onClick={() => {
             setViewMode('home');
             setSelectedRun(null);
           }}
           style={{ 
-            textAlign: 'center', 
+            display: 'inline-block',
             cursor: 'pointer',
-            transition: 'all 0.2s',
-            padding: '16px 20px',
-            borderRadius: '16px',
-            background: `linear-gradient(135deg, var(--primary-100) 0%, var(--accent-200) 100%)`,
-            boxShadow: '0 4px 16px rgba(139, 95, 191, 0.3)'
+            transition: 'transform 0.2s',
           }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 6px 20px rgba(139, 95, 191, 0.4)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 4px 16px rgba(139, 95, 191, 0.3)';
-          }}
+          onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.02)'}
+          onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
         >
-          <h1 style={{ fontSize: '24px', marginBottom: '4px', fontWeight: 'bold', color: 'var(--primary-300)' }}>
+          <h1 className="text-gradient" style={{ 
+            fontSize: '32px', 
+            marginBottom: '8px', 
+            fontWeight: '900', 
+            letterSpacing: '-0.02em',
+            lineHeight: 1.2
+          }}>
             お残しは許しまへんday
           </h1>
-          <p style={{ fontSize: '13px', color: 'var(--primary-300)', opacity: 0.9 }}>
+          <p style={{ 
+            fontSize: '15px', 
+            color: 'var(--text-200)', 
+            fontWeight: '500' 
+          }}>
             狩り残し確認・記録ツール
           </p>
         </div>
         
-        {/* テーマ切り替えボタン - ヘッダーの下に配置 */}
+        {/* テーマ切り替え: 控えめだがアクセスしやすい位置 */}
         <button
           onClick={(e) => {
             e.stopPropagation();
             toggleTheme();
           }}
+          className="secondary-button"
           style={{
             position: 'absolute',
-            bottom: '-20px',
-            right: '16px',
-            zIndex: 10,
-            background: 'var(--bg-300)',
-            border: '2px solid var(--accent-100)',
+            top: '20px',
+            right: '0',
+            padding: '8px 16px',
+            minHeight: 'auto',
             borderRadius: '20px',
-            padding: '6px 14px',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-            color: 'var(--text-100)',
-            fontSize: '12px',
-            fontWeight: '600',
-            minHeight: '36px'
+            fontSize: '13px',
+            background: 'var(--bg-glass)',
+            backdropFilter: 'blur(4px)',
+            boxShadow: 'var(--shadow-sm)'
           }}
+          title={theme === 'light' ? '常夜モードへ' : '白夜モードへ'}
         >
           {theme === 'light' ? '🌙' : '☀️'}
-          <span>{theme === 'light' ? '常夜' : '白夜'}</span>
         </button>
       </div>
 
-      {/* ナビゲーション */}
+      {/* ナビゲーション: セグメンテッドコントロール風 */}
       {viewMode !== 'edit' && (
         <div style={{ 
           display: 'flex', 
-          gap: '12px', 
-          marginBottom: '24px',
-          flexWrap: 'wrap',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          marginBottom: '32px',
+          background: 'var(--bg-200)',
+          padding: '6px',
+          borderRadius: '20px',
+          width: 'fit-content',
+          margin: '0 auto 32px'
         }}>
           <button
             onClick={() => setViewMode('home')}
             style={{
-              backgroundColor: viewMode === 'home' ? 'var(--primary-100)' : 'var(--bg-200)',
-              color: viewMode === 'home' ? 'var(--primary-300)' : 'var(--text-200)',
-              border: viewMode === 'home' ? 'none' : '1px solid var(--accent-100)'
+              backgroundColor: viewMode === 'home' ? 'var(--bg-100)' : 'transparent',
+              color: viewMode === 'home' ? 'var(--primary-200)' : 'var(--text-200)',
+              boxShadow: viewMode === 'home' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none',
+              borderRadius: '16px',
+              padding: '10px 24px',
+              minHeight: '44px',
+              fontWeight: '700',
+              fontSize: '14px',
+              transition: 'all 0.2s ease'
             }}
           >
             🏠 ホーム
@@ -199,9 +207,15 @@ function App() {
           <button
             onClick={() => setViewMode('statistics')}
             style={{
-              backgroundColor: viewMode === 'statistics' ? 'var(--primary-100)' : 'var(--bg-200)',
-              color: viewMode === 'statistics' ? 'var(--primary-300)' : 'var(--text-200)',
-              border: viewMode === 'statistics' ? 'none' : '1px solid var(--accent-100)'
+              backgroundColor: viewMode === 'statistics' ? 'var(--bg-100)' : 'transparent',
+              color: viewMode === 'statistics' ? 'var(--primary-200)' : 'var(--text-200)',
+              boxShadow: viewMode === 'statistics' ? '0 2px 8px rgba(0,0,0,0.1)' : 'none',
+              borderRadius: '16px',
+              padding: '10px 24px',
+              minHeight: '44px',
+              fontWeight: '700',
+              fontSize: '14px',
+              transition: 'all 0.2s ease'
             }}
           >
             📊 統計
@@ -212,13 +226,20 @@ function App() {
       {/* コンテンツ */}
       {viewMode === 'home' && (
         <>
-          <div className="card" style={{ marginBottom: '20px' }}>
+          <div style={{ marginBottom: '32px', textAlign: 'center' }}>
             <button
               onClick={handleCreateNewRun}
               className="primary-button"
-              style={{ width: '100%', padding: '14px', fontSize: '16px', fontWeight: 'bold' }}
+              style={{ 
+                width: '100%', 
+                maxWidth: '400px', 
+                fontSize: '18px', 
+                padding: '20px',
+                borderRadius: '24px',
+                boxShadow: '0 8px 24px rgba(124, 77, 255, 0.25)'
+              }}
             >
-              ➕ 新規作成
+              <span>✨ 新しいハントを始める</span>
             </button>
           </div>
           <RouteSetForm onRouteSetAdded={loadRouteSets} />

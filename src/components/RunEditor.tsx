@@ -250,50 +250,6 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
             />
           </div>
         </div>
-
-        {/* 狩り残しサマリー */}
-        {routeRuns.filter(r => r.hasRemaining).length > 0 && (
-          <div style={{ 
-            marginTop: '16px', 
-            padding: '12px', 
-            background: 'rgba(255, 107, 107, 0.1)', 
-            borderRadius: '10px',
-            border: '1px solid rgba(255, 107, 107, 0.3)'
-          }}>
-            <div style={{ fontSize: '12px', color: 'var(--text-200)', marginBottom: '8px', fontWeight: 'bold' }}>
-              🎯 狩り残し一覧
-            </div>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-              {routeRuns.filter(r => r.hasRemaining).map(r => (
-                <span
-                  key={r.routeId}
-                  style={{
-                    background: 'var(--bg-300)',
-                    color: '#FF6B6B',
-                    padding: '4px 10px',
-                    borderRadius: '6px',
-                    fontSize: '12px',
-                    fontWeight: '600',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px'
-                  }}
-                >
-                  {r.routeName}
-                  <span style={{ 
-                    background: '#FF6B6B', 
-                    color: 'white', 
-                    padding: '1px 6px', 
-                    borderRadius: '4px',
-                    fontSize: '11px'
-                  }}>
-                    {r.remainingCount}
-                  </span>
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
 
       {/* ルート一覧 */}
@@ -365,17 +321,19 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '8px',
+                justifyContent: 'space-between',
                 marginBottom: isCollapsed ? 0 : '6px'
               }}
             >
-              <span style={{ fontSize: '14px' }}>{isCollapsed ? '▶' : '▼'}</span>
-              <span style={{ fontWeight: 'bold', color: 'var(--text-100)', fontSize: '14px' }}>
-                {rr.groupName}
-              </span>
-              <span style={{ fontSize: '12px', color: 'var(--text-200)' }}>
-                ({groupRoutes.length})
-              </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '14px' }}>{isCollapsed ? '▶' : '▼'}</span>
+                <span style={{ fontWeight: 'bold', color: 'var(--text-100)', fontSize: '14px' }}>
+                  {rr.groupName}
+                </span>
+                <span style={{ fontSize: '12px', color: 'var(--text-200)' }}>
+                  ({groupRoutes.length})
+                </span>
+              </div>
               {groupRemaining > 0 && (
                 <span style={{ 
                   background: '#FF6B6B', 
@@ -423,24 +381,8 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
           borderRadius: '10px',
           backgroundColor: routeRun.hasRemaining ? 'var(--bg-100)' : 'var(--bg-300)',
           cursor: 'pointer',
-          transition: 'all 0.15s ease-out',
+          transition: 'all 0.2s',
           userSelect: 'none'
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'translateX(4px)';
-          e.currentTarget.style.boxShadow = '0 2px 8px rgba(139, 95, 191, 0.15)';
-          e.currentTarget.style.borderColor = 'var(--primary-100)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'translateX(0)';
-          e.currentTarget.style.boxShadow = 'none';
-          e.currentTarget.style.borderColor = routeRun.hasRemaining ? 'var(--primary-100)' : 'var(--bg-200)';
-        }}
-        onMouseDown={(e) => {
-          e.currentTarget.style.transform = 'translateX(2px) scale(0.98)';
-        }}
-        onMouseUp={(e) => {
-          e.currentTarget.style.transform = 'translateX(4px) scale(1)';
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>

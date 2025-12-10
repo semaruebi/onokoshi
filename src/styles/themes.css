@@ -1,45 +1,65 @@
-/* 淵下宮 白夜（ライトテーマ） */
+/* 淵下宮 白夜（ライトテーマ） - Modern & Sophisticated */
 :root {
-  --primary-100: #8B5FBF;
-  --primary-200: #61398F;
+  /* プライマリーカラー：落ち着いた紫 */
+  --primary-100: #7C4DFF; /* より鮮やかだが上品な紫 */
+  --primary-200: #651FFF;
   --primary-300: #FFFFFF;
-  --accent-100: #D6C6E1;
-  --accent-200: #9A73B5;
-  --text-100: #4A4A4A;
-  --text-200: #757575;
-  --text-300: #9E9E9E;
-  --bg-100: #F5F3F7;
-  --bg-200: #E9E4ED;
+  
+  /* アクセント：パステル調 */
+  --accent-100: #EDE7F6;
+  --accent-200: #B39DDB;
+  
+  /* テキスト：コントラスト重視 */
+  --text-100: #2D2D2D; /* 完全な黒ではない */
+  --text-200: #5F6368;
+  --text-300: #9AA0A6;
+  
+  /* 背景：洗練された白・グレー */
+  --bg-100: #F8F9FA;
+  --bg-200: #FFFFFF;
   --bg-300: #FFFFFF;
-  --bg-glass: rgba(255, 255, 255, 0.7);
-  --border-glass: rgba(255, 255, 255, 0.5);
-  --shadow-sm: 0 2px 8px rgba(139, 95, 191, 0.1);
-  --shadow-md: 0 4px 16px rgba(139, 95, 191, 0.15);
-  --shadow-lg: 0 8px 24px rgba(139, 95, 191, 0.2);
-  --success: #4CAF50;
-  --warning: #FF9800;
+  
+  /* Glassmorphism */
+  --bg-glass: rgba(255, 255, 255, 0.85);
+  --border-glass: rgba(255, 255, 255, 0.6);
+  --glass-blur: blur(12px);
+  
+  /* シャドウ：柔らかく広がる */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 16px 32px rgba(0, 0, 0, 0.12);
+  
+  /* 状態色 */
+  --success: #00C853;
+  --warning: #FFAB00;
   --error: #FF5252;
 }
 
-/* 淵下宮 常夜（ダークテーマ） */
+/* 淵下宮 常夜（ダークテーマ） - Deep & Bioluminescent */
 [data-theme="dark"] {
-  --primary-100: #9D74B5;
-  --primary-200: #7B4F8E;
-  --primary-300: #EADDF2;
-  --accent-100: #564366;
-  --accent-200: #895896;
-  --text-100: #F0F0F0;
+  --primary-100: #B388FF;
+  --primary-200: #7C4DFF;
+  --primary-300: #F3E5F5;
+  
+  --accent-100: #4527A0;
+  --accent-200: #7E57C2;
+  
+  --text-100: #F5F5F5;
   --text-200: #B0B0B0;
-  --text-300: #707070;
-  --bg-100: #3B2D4D;
-  --bg-200: #382B49;
-  --bg-300: #4D3B64;
-  --bg-glass: rgba(45, 36, 56, 0.7);
-  --border-glass: rgba(255, 255, 255, 0.1);
+  --text-300: #757575;
+  
+  --bg-100: #121212;
+  --bg-200: #1E1E24;
+  --bg-300: #2C2C35;
+  
+  --bg-glass: rgba(30, 30, 36, 0.75);
+  --border-glass: rgba(255, 255, 255, 0.08);
+  
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
-  --success: #66BB6A;
-  --warning: #FFA726;
-  --error: #FF5252;
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 16px 32px rgba(0, 0, 0, 0.5);
+  
+  --success: #69F0AE;
+  --warning: #FFD740;
+  --error: #FF8A80;
 }
