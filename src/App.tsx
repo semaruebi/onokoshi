@@ -260,7 +260,7 @@ function App() {
           <div style={{ marginBottom: '32px', textAlign: 'center' }}>
             <button
               onClick={handleCreateNewRun}
-              className="primary-button"
+              className="primary-button full-width-mobile"
               style={{ 
                 width: '100%', 
                 maxWidth: '400px', 

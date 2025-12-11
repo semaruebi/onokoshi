@@ -15,7 +15,7 @@ export const RouteSetForm = ({ onRouteSetAdded }: RouteSetFormProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!routeSetName.trim()) {
       alert('ルートセット名を入力してください');
       return;
@@ -93,13 +93,13 @@ export const RouteSetForm = ({ onRouteSetAdded }: RouteSetFormProps) => {
           <textarea
             value={routeText}
             onChange={(e) => setRouteText(e.target.value)}
-            placeholder="かつヴァナ 5&#10;聖遺殿 8&#10;...&#10;（livesplitのsegmentをそのまま貼り付けでOK)"
+            placeholder="- かつヴァナ(5)&#10;- 聖遺殿(8)&#10;...&#10;（livesplitのsegmentをそのまま貼り付けでOK)"
             style={{ minHeight: '120px' }}
             className="input-interactive"
           />
           <div style={{ marginTop: '12px', fontSize: '13px', color: 'var(--text-200)', lineHeight: '1.5' }}>
             形式: ルート名 精鋭数（例: かつヴァナ 5、かつヴァナ (5)、かつヴァナ）<br />
-            精鋭数は省略可能です
+            精鋭数は省略可能です(ぶっちゃけ使ってない)
           </div>
         </div>
         <button

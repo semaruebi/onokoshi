@@ -120,7 +120,7 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
     <div className={isCompleted ? 'animate-pop-in' : 'animate-slide-in'}>
       {/* メインカード - スクロール追従 */}
       <div 
-        className="card" 
+        className="card sticky-header-card" 
         style={{ 
           marginBottom: '16px', 
           border: '1px solid var(--primary-100)', 
@@ -134,7 +134,7 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
         }}
       >
         {/* ボタンバー */}
-        <div style={{ 
+        <div className="button-bar" style={{ 
           display: 'flex', 
           gap: '8px', 
           marginBottom: '12px',
@@ -157,7 +157,7 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
           </button>
         </div>
         {/* RUN名 */}
-        <div className="input-field-container" style={{ marginBottom: '16px' }}>
+        <div className="input-field-container run-name-container" style={{ marginBottom: '16px' }}>
           <input
             type="text"
             value={runName}
@@ -177,7 +177,7 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
         </div>
 
         {/* 最終結果 - コンパクト版 */}
-        <div style={{
+        <div className="final-count-container" style={{
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -190,7 +190,7 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
             <div style={{ fontSize: '11px', color: 'var(--text-200)', marginBottom: '4px', fontWeight: 700, letterSpacing: '0.05em' }}>
               FINAL COUNT
             </div>
-            <div style={{ 
+            <div className="final-count-value" style={{ 
               fontSize: '48px', 
               fontWeight: '800', 
               background: 'linear-gradient(135deg, var(--primary-100) 0%, var(--accent-200) 100%)',
@@ -212,12 +212,12 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
         </div>
 
         {/* 入力フィールド - 2x2グリッド */}
-        <div style={{
+        <div className="stats-grid" style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(2, 1fr)',
           gap: '12px',
         }}>
-          <div className="input-field-container">
+          <div className="input-field-container compact-input-container">
             <label style={{ fontSize: '13px' }}>想定精鋭数</label>
             <input
               type="number"
@@ -227,9 +227,9 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
               style={{ textAlign: 'center', fontWeight: 'bold' }}
             />
           </div>
-          <div>
+          <div className="compact-input-container">
             <label style={{ fontSize: '13px' }}>狩り残し総数</label>
-            <div style={{ 
+            <div className="stat-display" style={{ 
               padding: '14px 16px', 
               background: totalRemaining > 0 ? 'rgba(255, 107, 107, 0.1)' : 'rgba(76, 175, 80, 0.1)', 
               borderRadius: '12px', 
@@ -243,7 +243,7 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
               {totalRemaining}
             </div>
           </div>
-          <div className="input-field-container">
+          <div className="input-field-container compact-input-container">
             <label style={{ fontSize: '13px' }}>鶴観不足分</label>
             <input
               type="number"
@@ -253,7 +253,7 @@ export const RunEditor = ({ run, onSave, onCancel }: RunEditorProps) => {
               style={{ textAlign: 'center' }}
             />
           </div>
-          <div className="input-field-container">
+          <div className="input-field-container compact-input-container">
             <label style={{ fontSize: '13px' }}>アドリブ追加数</label>
             <input
               type="number"

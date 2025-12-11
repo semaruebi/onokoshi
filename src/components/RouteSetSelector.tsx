@@ -50,7 +50,7 @@ export const RouteSetSelector = ({ routeSets, onSelect, onCancel, onRouteSetDele
 
   const handleSaveEdit = async () => {
     if (!editingRouteSet) return;
-    
+
     if (!editName.trim()) {
       alert('ルートセット名を入力してください');
       return;
@@ -101,7 +101,7 @@ export const RouteSetSelector = ({ routeSets, onSelect, onCancel, onRouteSetDele
         <h2 style={{ marginBottom: '20px', color: 'var(--text-100)', fontSize: '18px', fontWeight: 'bold' }}>
           ✏️ ルートセットを編集
         </h2>
-        
+
         <div className="input-field-container" style={{ marginBottom: '16px' }}>
           <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: 'var(--text-100)' }}>
             ルートリスト (Subsplits対応)
@@ -163,23 +163,35 @@ export const RouteSetSelector = ({ routeSets, onSelect, onCancel, onRouteSetDele
 
   return (
     <div style={{ maxWidth: '900px', margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
-        <div>
-          <h2 style={{ color: 'var(--text-100)', fontSize: '24px', fontWeight: '800', marginBottom: '4px' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+        <div style={{ minWidth: 0 }}>
+          <h2 style={{
+            color: 'var(--text-100)',
+            fontSize: '20px',
+            fontWeight: '800',
+            marginBottom: '4px',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}>
             🗺️ ルートセットを選択
           </h2>
-          <p style={{ color: 'var(--text-200)', fontSize: '14px' }}>
-            本日のハントに使用するルートを選んでください
+          <p style={{ color: 'var(--text-200)', fontSize: '13px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            今日走ったルートを選んでください
           </p>
         </div>
-        <button onClick={onCancel} className="secondary-button">
+        <button
+          onClick={onCancel}
+          className="secondary-button"
+          style={{ padding: '8px 16px', minHeight: '40px', fontSize: '13px', flexShrink: 0, marginLeft: '12px' }}
+        >
           キャンセル
         </button>
       </div>
 
-      <div style={{ 
-        display: 'grid', 
-        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', 
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
         gap: '24px',
         marginBottom: '40px'
       }}>
@@ -198,26 +210,26 @@ export const RouteSetSelector = ({ routeSets, onSelect, onCancel, onRouteSetDele
             }}
           >
             <div>
-              <div style={{ 
-                fontWeight: '800', 
-                fontSize: '20px', 
-                color: 'var(--text-100)', 
+              <div style={{
+                fontWeight: '800',
+                fontSize: '20px',
+                color: 'var(--text-100)',
                 marginBottom: '8px',
                 lineHeight: 1.4
               }}>
                 {routeSet.name}
               </div>
-              <div style={{ 
-                fontSize: '14px', 
-                color: 'var(--text-200)', 
-                display: 'flex', 
+              <div style={{
+                fontSize: '14px',
+                color: 'var(--text-200)',
+                display: 'flex',
                 flexWrap: 'wrap',
                 gap: '12px',
-                marginTop: '12px' 
+                marginTop: '12px'
               }}>
-                <span style={{ 
-                  background: 'var(--bg-100)', 
-                  padding: '4px 10px', 
+                <span style={{
+                  background: 'var(--bg-100)',
+                  padding: '4px 10px',
                   borderRadius: '20px',
                   fontSize: '12px',
                   fontWeight: '600'
@@ -225,10 +237,10 @@ export const RouteSetSelector = ({ routeSets, onSelect, onCancel, onRouteSetDele
                   📦 {routeSet.routes.length} ルート
                 </span>
                 {routeSet.expectedEliteCount > 0 && (
-                  <span style={{ 
-                    background: 'var(--accent-100)', 
+                  <span style={{
+                    background: 'var(--accent-100)',
                     color: 'var(--accent-200)',
-                    padding: '4px 10px', 
+                    padding: '4px 10px',
                     borderRadius: '20px',
                     fontSize: '12px',
                     fontWeight: '600'
@@ -239,10 +251,10 @@ export const RouteSetSelector = ({ routeSets, onSelect, onCancel, onRouteSetDele
               </div>
             </div>
 
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'flex-end', 
-              gap: '8px', 
+            <div style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              gap: '8px',
               marginTop: '24px',
               borderTop: '1px solid var(--bg-200)',
               paddingTop: '16px'

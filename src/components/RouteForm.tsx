@@ -12,7 +12,7 @@ export const RouteForm = ({ onRouteAdded }: RouteFormProps) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!routeText.trim()) {
       alert('ルートリストを入力してください');
       return;
@@ -45,17 +45,18 @@ export const RouteForm = ({ onRouteAdded }: RouteFormProps) => {
       <form onSubmit={handleSubmit}>
         <div className="input-field-container" style={{ marginBottom: '16px' }}>
           <label style={{ display: 'block', marginBottom: '8px', fontWeight: 600, color: '#555' }}>
-          ルートリスト (Subsplits対応)
+            ルートリスト (Subsplits対応)
           </label>
           <textarea
             value={routeText}
             onChange={(e) => setRouteText(e.target.value)}
-            placeholder="かつヴァナ 5&#10;聖遺殿 8&#10;...&#10;（livesplitのsegmentをそのまま貼り付けでOK)"
+            placeholder="- かつヴァナ(5)&#10;- 聖遺殿(8)&#10;...&#10;（livesplitのsegmentをそのまま貼り付けでOK)"
             style={{ width: '100%', minHeight: '150px' }}
             className="input-interactive"
           />
           <div style={{ marginTop: '8px', fontSize: '14px', color: '#666' }}>
             形式: ルート名 精鋭数（例: かつヴァナ(5)）
+            精鋭数は省略可能です(ぶっちゃけ使ってない)
           </div>
         </div>
         <button

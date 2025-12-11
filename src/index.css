@@ -383,19 +383,102 @@ label {
 /* レスポンシブ */
 @media (max-width: 768px) {
   body {
-    padding: 16px;
+    padding: 12px;
   }
   
   .card {
-    padding: 24px;
-    border-radius: 20px;
+    padding: 16px;
+    border-radius: 16px;
+    margin-bottom: 16px;
   }
   
   h1 {
-    font-size: 22px !important;
+    font-size: 20px !important;
+    margin-bottom: 4px !important;
+  }
+  
+  h2 {
+    font-size: 18px !important;
+    margin-bottom: 12px !important;
+  }
+
+  p {
+    font-size: 13px !important;
+  }
+
+  .input-field-container {
+    margin-bottom: 12px !important;
   }
   
   button {
-    width: 100%; /* モバイルでは全幅ボタンが押しやすい */
+    padding: 10px 20px;
+    min-height: 44px;
+    font-size: 14px;
+  }
+
+  input, textarea, select {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+  
+  /* ボタンの全幅強制を削除し、必要な箇所のみ適用するように変更 */
+  /* button.primary-button, button.secondary-button {
+    width: 100%; 
+    justify-content: center;
+  } */
+  
+  .full-width-mobile {
+    width: 100% !important;
+    justify-content: center;
+  }
+  
+  /* RunEditor Sticky Header Mobile Optimization */
+  .sticky-header-card {
+    padding: 12px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .sticky-header-card .button-bar {
+    margin-bottom: 8px !important;
+  }
+  
+  .run-name-container {
+    margin-bottom: 8px !important;
+  }
+
+  .sticky-header-card input[type="text"] {
+    font-size: 15px !important;
+    padding: 8px 12px !important;
+  }
+
+  .final-count-container {
+    padding: 8px !important;
+    margin-bottom: 8px !important;
+    min-height: auto;
+  }
+
+  .final-count-value {
+    font-size: 32px !important;
+    margin-bottom: 0 !important;
+    line-height: 1.2 !important;
+  }
+
+  .stats-grid {
+    gap: 8px !important;
+  }
+  
+  .compact-input-container label {
+    font-size: 10px !important;
+    margin-bottom: 2px !important;
+  }
+  
+  .compact-input-container input,
+  .compact-input-container .stat-display {
+    padding: 4px 8px !important;
+    height: 32px !important; /* 入力欄の高さを抑える */
+    font-size: 14px !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 }
